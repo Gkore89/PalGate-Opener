@@ -2,55 +2,90 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0A0A"
+    android:background="#0D0D0D"
     android:layoutDirection="rtl">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
-        <!-- Header -->
-        <TextView
+        <!-- ── HEADER ── -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="פותח שערים"
-            android:textColor="#FFFFFF"
-            android:textSize="28sp"
-            android:fontFamily="sans-serif-light"
-            android:layout_marginBottom="4dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="12dp">
 
-        <TextView
-            android:id="@+id/tv_linked_as"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#666666"
-            android:textSize="13sp"
-            android:layout_marginBottom="28dp"/>
+            <!-- Car emoji as header icon -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🚗"
+                android:textSize="32sp"
+                android:layout_marginEnd="12dp"/>
 
-        <!-- Status Card -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="פותח שערים"
+                    android:textColor="#FFFFFF"
+                    android:textSize="26sp"
+                    android:fontFamily="sans-serif-light"/>
+
+                <TextView
+                    android:id="@+id/tv_linked_as"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="לא מחובר"
+                    android:textColor="#555555"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+            <!-- Settings icon button -->
+            <TextView
+                android:id="@+id/btn_settings"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:text="⚙"
+                android:textSize="22sp"
+                android:textColor="#444444"
+                android:gravity="center"
+                android:background="@drawable/card_bg"/>
+        </LinearLayout>
+
+        <!-- ── STATUS CARD ── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/card_bg"
-            android:padding="20dp"
-            android:orientation="vertical"
-            android:layout_marginBottom="16dp">
+            android:padding="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp">
+
+            <ImageView
+                android:id="@+id/iv_dot"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/dot_red"
+                android:layout_marginEnd="12dp"/>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="8dp">
-
-                <ImageView
-                    android:id="@+id/iv_dot"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:src="@drawable/dot_red"
-                    android:layout_marginEnd="10dp"/>
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_status"
@@ -58,82 +93,164 @@
                     android:layout_height="wrap_content"
                     android:text="מאתחל..."
                     android:textColor="#FFFFFF"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:fontFamily="sans-serif-medium"/>
-            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_last_event"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="אחרון: אין"
-                android:textColor="#666666"
-                android:textSize="13sp"/>
+                <TextView
+                    android:id="@+id/tv_last_event"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="אחרון: אין"
+                    android:textColor="#555555"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp"/>
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- Link Button -->
+        <!-- ── LINK BUTTON ── -->
         <Button
             android:id="@+id/btn_link"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginBottom="12dp"
-            android:text="קשר חשבון PalGate"
+            android:layout_height="52dp"
+            android:layout_marginBottom="20dp"
+            android:text="🔗  קשר חשבון PalGate"
             android:textColor="#000000"
             android:backgroundTint="#00C896"
             android:textAllCaps="false"
-            android:textSize="16sp"/>
+            android:textSize="15sp"/>
 
-        <!-- Gate Buttons -->
+        <!-- ── GATE BUTTONS LABEL ── -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="פתיחה ידנית"
-            android:textColor="#444444"
+            android:textColor="#333333"
             android:textSize="11sp"
-            android:letterSpacing="0.1"
+            android:letterSpacing="0.12"
             android:layout_marginBottom="10dp"/>
 
+        <!-- ── GATE BUTTONS ── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="24dp">
+            android:orientation="horizontal">
 
-            <Button
+            <!-- Gate 1 - North -->
+            <LinearLayout
                 android:id="@+id/btn_gate1"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="100dp"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:text="פתח שער 1"
-                android:textColor="#000000"
-                android:backgroundTint="#00C896"
-                android:textAllCaps="false"
-                android:enabled="false"/>
+                android:background="@drawable/gate_btn_north"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true">
 
-            <Button
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏗"
+                    android:textSize="28sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="שער צפון"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginTop="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="כניסה ראשית"
+                    android:textColor="#00000088"
+                    android:textSize="11sp"/>
+            </LinearLayout>
+
+            <!-- Gate 2 - South -->
+            <LinearLayout
                 android:id="@+id/btn_gate2"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="100dp"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:text="פתח שער 2"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#1E1E1E"
-                android:textAllCaps="false"
-                android:enabled="false"/>
+                android:background="@drawable/gate_btn_south"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏗"
+                    android:textSize="28sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="שער דרום"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginTop="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="כניסה משנית"
+                    android:textColor="#FFFFFF88"
+                    android:textSize="11sp"/>
+            </LinearLayout>
+
         </LinearLayout>
 
-        <!-- Settings -->
-        <Button
-            android:id="@+id/btn_settings"
+        <!-- ── HOW IT WORKS ── -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="⚙ הגדרות"
-            android:textColor="#666666"
-            android:backgroundTint="#111111"
-            android:textAllCaps="false"
-            android:textSize="14sp"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_bg"
+            android:padding="16dp"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="איך זה עובד"
+                android:textColor="#333333"
+                android:textSize="11sp"
+                android:letterSpacing="0.12"
+                android:layout_marginBottom="10dp"/>
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="🚗" android:textSize="16sp" android:layout_marginEnd="10dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="כניסה: Bluetooth רכב + קרוב לשער + מהירות > 10 קמ\"ש"
+                    android:textColor="#666666" android:textSize="12sp"/>
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="🅿️" android:textSize="16sp" android:layout_marginEnd="10dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="יציאה: WiFi חניון + מהירות > 10 קמ\"ש"
+                    android:textColor="#666666" android:textSize="12sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
