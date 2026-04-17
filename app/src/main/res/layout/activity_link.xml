@@ -1,119 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="32dp"
-    android:background="#0A0A0A"
+    android:background="#0D0D0D"
     android:layoutDirection="rtl">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="קישור חשבון PalGate"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center"
-        android:layout_marginBottom="8dp"/>
-
-    <TextView
-        android:id="@+id/tv_link_status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="מתחבר..."
-        android:textColor="#888888"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:layout_marginBottom="24dp"/>
-
-    <!-- QR Code display -->
-    <ImageView
-        android:id="@+id/iv_qr"
-        android:layout_width="280dp"
-        android:layout_height="280dp"
-        android:background="#FFFFFF"
-        android:padding="8dp"
-        android:layout_marginBottom="24dp"
-        android:scaleType="fitCenter"/>
-
-    <!-- Instructions -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/card_bg"
-        android:padding="16dp"
-        android:layout_marginBottom="24dp">
+        android:padding="24dp">
 
+        <!-- Header -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="הוראות:"
-            android:textColor="#00C896"
-            android:textSize="13sp"
-            android:fontFamily="sans-serif-medium"
+            android:text="🔗"
+            android:textSize="48sp"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1. פתח את אפליקציית PalGate"
-            android:textColor="#CCCCCC"
-            android:textSize="13sp"
+            android:text="חיבור חשבון PalGate"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
             android:layout_marginBottom="4dp"/>
 
         <TextView
+            android:id="@+id/tv_link_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="2. לחץ על ☰ (תפריט) למעלה"
-            android:textColor="#CCCCCC"
-            android:textSize="13sp"
-            android:layout_marginBottom="4dp"/>
+            android:text="הכנס את פרטי החשבון"
+            android:textColor="#555555"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_marginBottom="28dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="3. בחר &quot;מכשירים מקושרים&quot;"
-            android:textColor="#CCCCCC"
-            android:textSize="13sp"
-            android:layout_marginBottom="4dp"/>
+        <!-- Fields -->
+        <TextView style="@style/FieldLabel" android:text="מספר טלפון (בפורמט בינלאומי, ללא +)"/>
+        <EditText android:id="@+id/et_phone" style="@style/FieldInput"
+            android:hint="972501234567"
+            android:inputType="phone"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="4. לחץ &quot;קשר מכשיר&quot;"
-            android:textColor="#CCCCCC"
-            android:textSize="13sp"
-            android:layout_marginBottom="4dp"/>
+        <TextView style="@style/FieldLabel" android:text="Session Token (32 תווים)"/>
+        <EditText android:id="@+id/et_token" style="@style/FieldInput"
+            android:hint="32 תווים hexadecimal"
+            android:inputType="textNoSuggestions"
+            android:fontFamily="monospace"/>
 
-        <TextView
+        <TextView style="@style/FieldLabel" android:text="סוג טוקן (0=SMS, 1=ראשי, 2=משני)"/>
+        <EditText android:id="@+id/et_token_type" style="@style/FieldInput"
+            android:hint="1"
+            android:inputType="number"/>
+
+        <!-- How to get token -->
+        <Button
+            android:id="@+id/btn_how_to_get"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="5. סרוק את קוד ה-QR למעלה"
-            android:textColor="#CCCCCC"
-            android:textSize="13sp"/>
+            android:layout_height="48dp"
+            android:layout_marginBottom="8dp"
+            android:text="❓  איך מקבלים טוקן?"
+            android:textColor="#00C896"
+            android:backgroundTint="#001A12"
+            android:textAllCaps="false"
+            android:textSize="14sp"/>
+
+        <!-- Save -->
+        <Button
+            android:id="@+id/btn_save_link"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            android:text="שמור וחבר"
+            android:textColor="#000000"
+            android:backgroundTint="#00C896"
+            android:textAllCaps="false"
+            android:textSize="16sp"/>
+
+        <!-- Back -->
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="חזור"
+            android:textColor="#555555"
+            android:backgroundTint="#111111"
+            android:textAllCaps="false"
+            android:textSize="14sp"/>
+
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_retry"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="נסה שוב"
-        android:textColor="#000000"
-        android:backgroundTint="#00C896"
-        android:textAllCaps="false"
-        android:visibility="gone"
-        android:layout_marginBottom="12dp"/>
-
-    <Button
-        android:id="@+id/btn_back"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="חזור"
-        android:textColor="#666666"
-        android:backgroundTint="#111111"
-        android:textAllCaps="false"/>
-
-</LinearLayout>
+</ScrollView>
