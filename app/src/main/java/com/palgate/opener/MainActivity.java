@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             new AlertDialog.Builder(this)
                     .setTitle("שגיאה")
-                    .setMessage(msg != null ? msg : "שגיאה לא ידועה"
+                    .setMessage(msg != null ? msg : "שגיאה לא ידועה")
                     .setPositiveButton("אישור", null)
                     .show();
         } catch (Exception ignored) {}
