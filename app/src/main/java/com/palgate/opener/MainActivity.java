@@ -177,17 +177,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void startMonitorService() {
-        try {
-            Intent i = new Intent(this, GateMonitorService.class);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                startForegroundService(i);
-            else
-                startService(i);
-        } catch (Exception e) {
-            showError("שגיאה בהפעלת שירות: " + e.getMessage());
-        }
+private void startMonitorService() {
+    try {
+        Intent i = new Intent(this, GateMonitorService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            startForegroundService(i);
+        else
+            startService(i);
+    } catch (Exception e) {
+        showError("שגיאה בהפעלת שירות: " + e.getClass().getSimpleName() + " - " + e.getMessage());
     }
+}
 
     private void requestPerms() {
         try {
@@ -213,13 +213,15 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception ignored) {}
     }
 
-    private void showError(String msg) {
-        try {
-            new AlertDialog.Builder(this)
-                    .setTitle("שגיאה")
-                    .setMessage(msg != null ? msg : "שגיאה לא ידועה")
-                    .setPositiveButton("אישור", null)
-                    .show();
-        } catch (Exception ignored) {}
+private void showError(String msg) {
+    try {
+        Toast.makeText(this, msg != null ? msg : "שגיאה לא ידועה", Toast.LENGTH_LONG).show();
+        new AlertDialog.Builder(this)
+                .setTitle("שגיאה")
+                .setMessage(msg != null ? msg : "שגיאה לא ידועה")
+                .setPositiveButton("אישור", null)
+                .show();
+    } catch (Exception e2) {
+        Toast.makeText(this, "critical error", Toast.LENGTH_LONG).show();
     }
 }
