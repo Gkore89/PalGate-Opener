@@ -24,16 +24,11 @@ jobs:
           unzip -q gradle-8.4-bin.zip
           echo "$PWD/gradle-8.4/bin" >> $GITHUB_PATH
 
-      - name: Show structure
-        run: find . -name "build.gradle" | head -20
-
       - name: Build APK
-        run: |
-          cd palgate-app/palgate-app
-          gradle assembleDebug
+        run: gradle assembleDebug
 
       - uses: actions/upload-artifact@v4
         with:
           name: palgate-opener-debug
-          path: palgate-app/palgate-app/app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
