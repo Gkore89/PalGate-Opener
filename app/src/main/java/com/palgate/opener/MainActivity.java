@@ -1,42 +1,62 @@
 package com.palgate.opener;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.content.Intent;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
-/**
- * Ultra-minimal version to diagnose crash.
- * No service, no BT, no location — just a screen.
- */
 public class MainActivity extends AppCompatActivity {
+
+    private TextView tvStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Don't even use XML layout — build UI in code to eliminate any resource issues
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(48, 48, 48, 48);
+        layout.setPadding(48, 96, 48, 48);
+        layout.setBackgroundColor(0xFF0A0A0A);
 
         TextView title = new TextView(this);
         title.setText("PalGate Opener");
         title.setTextSize(24);
+        title.setTextColor(0xFFFFFFFF);
         layout.addView(title);
 
-        TextView status = new TextView(this);
-        status.setText("האפליקציה עובדת! ✓\n\nגרסת אבחון — אין שירות רקע");
-        status.setTextSize(16);
-        status.setPadding(0, 32, 0, 0);
-        layout.addView(status);
+        tvStatus = new TextView(this);
+        tvStatus.setText("מפעיל שירות...");
+        tvStatus.setTextSize(15);
+        tvStatus.setTextColor(0xFF888888);
+        tvStatus.setPadding(0, 32, 0, 32);
+        layout.addView(tvStatus);
 
-        Button btnTest = new Button(this);
-        btnTest.setText("בדוק חיבור PalGate");
-        btnTest.setOnClickListener(v -> {
-            status.setText("לוחץ... ✓\nהאפליקציה מגיבה כראוי");
-        });
-        layout.addView(btnTest);
+        Button btnStart = new Button(this);
+        btnStart.setText("הפעל שירות");
+        btnStart.setOnClickListener(v -> startMonitorService());
+        layout.addView(btnStart);
 
         setContentView(layout);
+
+        // Try starting service
+        startMonitorService();
+    }
+
+    private void startMonitorService() {
+        try {
+            tvStatus.setText("מנסה להפעיל שירות...");
+            Intent i = new Intent(this, GateMonitorService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(i);
+            } else {
+                startService(i);
+            }
+            tvStatus.setText("✓ השירות הופעל בהצלחה!\n\nAndroid: " + Build.VERSION.RELEASE
+                    + "\nSDK: " + Build.VERSION.SDK_INT);
+        } catch (Exception e) {
+            tvStatus.setText("✗ שגיאה בהפעלת שירות:\n\n" + e.getClass().getSimpleName()
+                    + "\n" + e.getMessage());
+        }
     }
 }
