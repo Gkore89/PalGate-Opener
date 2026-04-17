@@ -21,11 +21,12 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tvStatus, tvLastEvent, tvLinkedAs;
     private ImageView ivDot;
-    private Button btnLink, btnOpenGate1, btnOpenGate2, btnSettings;
+    private View btnLink, btnOpenGate1, btnOpenGate2, btnSettings;
     private AppPrefs prefs;
 
     private final BroadcastReceiver statusReceiver = new BroadcastReceiver() {
-        @Override public void onReceive(Context ctx, Intent intent) {
+        @Override
+        public void onReceive(Context ctx, Intent intent) {
             try {
                 updateStatus(
                     intent.getStringExtra(GateMonitorService.EXTRA_STATUS),
@@ -41,14 +42,14 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
             prefs = new AppPrefs(this);
 
-            tvStatus    = findViewById(R.id.tv_status);
-            tvLastEvent = findViewById(R.id.tv_last_event);
-            tvLinkedAs  = findViewById(R.id.tv_linked_as);
-            ivDot       = findViewById(R.id.iv_dot);
-            btnLink     = findViewById(R.id.btn_link);
-            btnOpenGate1= findViewById(R.id.btn_gate1);
-            btnOpenGate2= findViewById(R.id.btn_gate2);
-            btnSettings = findViewById(R.id.btn_settings);
+            tvStatus     = findViewById(R.id.tv_status);
+            tvLastEvent  = findViewById(R.id.tv_last_event);
+            tvLinkedAs   = findViewById(R.id.tv_linked_as);
+            ivDot        = findViewById(R.id.iv_dot);
+            btnLink      = findViewById(R.id.btn_link);
+            btnOpenGate1 = findViewById(R.id.btn_gate1);
+            btnOpenGate2 = findViewById(R.id.btn_gate2);
+            btnSettings  = findViewById(R.id.btn_settings);
 
             btnLink.setOnClickListener(v -> openLinking());
             btnOpenGate1.setOnClickListener(v -> manualOpen(prefs.getGate1Id(), "שער צפון"));
@@ -57,15 +58,15 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(this, SettingsActivity.class)));
 
             requestPerms();
-            // Delay service start slightly to allow permissions dialog to resolve
-            new android.os.Handler().postDelayed(this::startMonitorService, 500);
+            new Handler().postDelayed(this::startMonitorService, 500);
 
         } catch (Exception e) {
-            showError("שגיאת אתחול: " + e.getMessage());
+            showError("שגיאת אתחול: " + e.getClass().getSimpleName() + " - " + e.getMessage());
         }
     }
 
-    @Override protected void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         try {
             registerReceiver(statusReceiver,
@@ -74,12 +75,14 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception ignored) {}
     }
 
-    @Override protected void onPause() {
+    @Override
+    protected void onPause() {
         super.onPause();
         try { unregisterReceiver(statusReceiver); } catch (Exception ignored) {}
     }
 
-    @Override protected void onActivityResult(int req, int res, Intent data) {
+    @Override
+    protected void onActivityResult(int req, int res, Intent data) {
         super.onActivityResult(req, res, data);
         if (req == REQ_LINK && res == RESULT_OK) {
             refreshUI();
@@ -90,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
     private void openLinking() {
         try {
             startActivityForResult(new Intent(this, LinkActivity.class), REQ_LINK);
-        } catch (Exception e) { showError("שגיאה: " + e.getMessage()); }
+        } catch (Exception e) {
+            showError("שגיאה: " + e.getMessage());
+        }
     }
 
     private void manualOpen(String gateId, String gateName) {
@@ -104,7 +109,9 @@ public class MainActivity extends AppCompatActivity {
             i.putExtra(GateMonitorService.EXTRA_GATE_ID, gateId);
             startService(i);
             tvStatus.setText("פותח " + gateName + "...");
-        } catch (Exception e) { showError("שגיאה: " + e.getMessage()); }
+        } catch (Exception e) {
+            showError("שגיאה: " + e.getMessage());
+        }
     }
 
     private void showBtPicker() {
@@ -147,12 +154,13 @@ public class MainActivity extends AppCompatActivity {
                     ? "מחובר: " + phone + (bt.isEmpty() ? "" : " | " + bt)
                     : "לא מחובר");
 
-            btnLink.setText(linked ? "חבר מחדש / שנה חשבון" : "קשר חשבון PalGate");
-            btnOpenGate1.setEnabled(linked);
-            btnOpenGate2.setEnabled(linked);
+            btnLink.setAlpha(1f);
+
+            if (btnOpenGate1 != null) btnOpenGate1.setAlpha(linked ? 1f : 0.4f);
+            if (btnOpenGate2 != null) btnOpenGate2.setAlpha(linked ? 1f : 0.4f);
 
             if (linked && bt.isEmpty()) {
-                tvStatus.setText("בחר רכב להפעלה אוטומטית ←");
+                tvStatus.setText("בחר רכב להפעלה אוטומטית");
                 ivDot.setImageResource(R.drawable.dot_yellow);
             } else if (linked) {
                 tvStatus.setText("ממתין לחיבור רכב...");
@@ -177,17 +185,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-private void startMonitorService() {
-    try {
-        Intent i = new Intent(this, GateMonitorService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            startForegroundService(i);
-        else
-            startService(i);
-    } catch (Exception e) {
-        showError("שגיאה בהפעלת שירות: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+    private void startMonitorService() {
+        try {
+            Intent i = new Intent(this, GateMonitorService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                startForegroundService(i);
+            else
+                startService(i);
+        } catch (Exception e) {
+            showError("שגיאה בהפעלת שירות: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+        }
     }
-}
 
     private void requestPerms() {
         try {
@@ -213,15 +221,15 @@ private void startMonitorService() {
         } catch (Exception ignored) {}
     }
 
-private void showError(String msg) {
-    try {
-        Toast.makeText(this, msg != null ? msg : "שגיאה לא ידועה", Toast.LENGTH_LONG).show();
-        new AlertDialog.Builder(this)
-                .setTitle("שגיאה")
-                .setMessage(msg != null ? msg : "שגיאה לא ידועה")
-                .setPositiveButton("אישור", null)
-                .show();
-    } catch (Exception e2) {
-        Toast.makeText(this, "critical error", Toast.LENGTH_LONG).show();
+    private void showError(String msg) {
+        try {
+            String message = msg != null ? msg : "שגיאה לא ידועה";
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            new AlertDialog.Builder(this)
+                    .setTitle("שגיאה")
+                    .setMessage(message)
+                    .setPositiveButton("אישור", null)
+                    .show();
+        } catch (Exception ignored) {}
     }
 }
