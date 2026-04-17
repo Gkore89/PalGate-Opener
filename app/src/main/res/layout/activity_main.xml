@@ -45,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="לא מחובר"
-                    android:textColor="#555555"
+                    android:textColor="#AAAAAA"
                     android:textSize="12sp"/>
             </LinearLayout>
 
@@ -55,7 +55,7 @@
                 android:layout_height="44dp"
                 android:text="&#9881;"
                 android:textSize="22sp"
-                android:textColor="#444444"
+                android:textColor="#AAAAAA"
                 android:gravity="center"
                 android:background="@drawable/card_bg"/>
         </LinearLayout>
@@ -98,7 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="אחרון: אין"
-                    android:textColor="#555555"
+                    android:textColor="#AAAAAA"
                     android:textSize="12sp"
                     android:layout_marginTop="2dp"/>
             </LinearLayout>
@@ -121,7 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="פתיחה ידנית"
-            android:textColor="#333333"
+            android:textColor="#AAAAAA"
             android:textSize="11sp"
             android:letterSpacing="0.12"
             android:layout_marginBottom="10dp"/>
@@ -132,7 +132,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Gate 1 - North -->
             <LinearLayout
                 android:id="@+id/btn_gate1"
                 android:layout_width="0dp"
@@ -161,7 +160,6 @@
                     android:layout_marginTop="6dp"/>
             </LinearLayout>
 
-            <!-- Gate 2 - South -->
             <LinearLayout
                 android:id="@+id/btn_gate2"
                 android:layout_width="0dp"
@@ -205,7 +203,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="איך זה עובד"
-                android:textColor="#333333"
+                android:textColor="#AAAAAA"
                 android:textSize="11sp"
                 android:letterSpacing="0.12"
                 android:layout_marginBottom="10dp"/>
@@ -219,7 +217,7 @@
                     android:text="&#128664;" android:textSize="16sp" android:layout_marginEnd="10dp"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="כניסה: Bluetooth רכב + קרוב לשער + מהירות מעל 10 קמ/ש"
-                    android:textColor="#666666" android:textSize="12sp"/>
+                    android:textColor="#CCCCCC" android:textSize="12sp"/>
             </LinearLayout>
 
             <LinearLayout android:layout_width="match_parent"
@@ -230,7 +228,7 @@
                     android:text="&#127359;" android:textSize="16sp" android:layout_marginEnd="10dp"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="יציאה: WiFi חניון + מהירות מעל 10 קמ/ש"
-                    android:textColor="#666666" android:textSize="12sp"/>
+                    android:textColor="#CCCCCC" android:textSize="12sp"/>
             </LinearLayout>
 
         </LinearLayout>

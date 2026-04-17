@@ -46,7 +46,6 @@ public class LinkActivity extends AppCompatActivity {
             tvStatus.setTextColor(0xFFFF6B6B);
             return;
         }
-
         if (token.length() != 32) {
             tvStatus.setText("הטוקן חייב להיות 32 תווים (כרגע: " + token.length() + ")");
             tvStatus.setTextColor(0xFFFF6B6B);
@@ -59,34 +58,34 @@ public class LinkActivity extends AppCompatActivity {
         prefs.saveCredentials(phone, token, tokenType);
         tvStatus.setText("החיבור נשמר בהצלחה!");
         tvStatus.setTextColor(0xFF00C896);
-
         setResult(RESULT_OK);
         new Handler().postDelayed(this::finish, 1200);
     }
 
     private void showHowTo() {
-        try {
-            new AlertDialog.Builder(this)
-                .setTitle("איך מקבלים טוקן?")
-                .setMessage(
-                    "שלב 1: התקן Python\n" +
-                    "הורד מ-python.org ובחר 'Add to PATH'\n\n" +
-                    "שלב 2: הורד את הסקריפט\n" +
-                    "github.com/DonutByte/pylgate\n" +
-                    "examples/generate_linked_device_session_token.py\n\n" +
-                    "שלב 3: התקן תלויות\n" +
-                    "pip install qrcode requests\n\n" +
-                    "שלב 4: הרץ את הסקריפט\n" +
-                    "python generate_linked_device_session_token.py\n\n" +
-                    "שלב 5: סרוק QR באפליקציית PalGate\n" +
-                    "תפריט -> מכשירים מקושרים -> קשר מכשיר\n\n" +
-                    "שלב 6: העתק את הטוקן שמודפס למסך\n" +
-                    "והכנס אותו כאן יחד עם מספר הטלפון"
-                )
-                .setPositiveButton("הבנתי", null)
-                .show();
-        } catch (Exception e) {
-            Toast.makeText(this, "שגיאה: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        // Use explicit light theme context for dialog so text is always visible
+        androidx.appcompat.view.ContextThemeWrapper ctx =
+            new androidx.appcompat.view.ContextThemeWrapper(this,
+                androidx.appcompat.R.style.Theme_AppCompat_Light_Dialog_Alert);
+
+        new AlertDialog.Builder(ctx)
+            .setTitle("איך מקבלים טוקן?")
+            .setMessage(
+                "שלב 1: התקן Python\n" +
+                "הורד מ-python.org ובחר Add to PATH\n\n" +
+                "שלב 2: הורד את הסקריפט\n" +
+                "github.com/DonutByte/pylgate\n" +
+                "examples > generate_linked_device_session_token.py\n\n" +
+                "שלב 3: התקן תלויות\n" +
+                "pip install qrcode requests\n\n" +
+                "שלב 4: הרץ את הסקריפט\n" +
+                "python generate_linked_device_session_token.py\n\n" +
+                "שלב 5: סרוק QR באפליקציית PalGate\n" +
+                "תפריט > מכשירים מקושרים > קשר מכשיר\n\n" +
+                "שלב 6: העתק את הטוקן שמודפס\n" +
+                "והכנס אותו כאן עם מספר הטלפון"
+            )
+            .setPositiveButton("הבנתי", null)
+            .show();
     }
 }
