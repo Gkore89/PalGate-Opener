@@ -57,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(this, SettingsActivity.class)));
 
             requestPerms();
-            startMonitorService();
+            // Delay service start slightly to allow permissions dialog to resolve
+            new android.os.Handler().postDelayed(this::startMonitorService, 500);
 
         } catch (Exception e) {
             showError("שגיאת אתחול: " + e.getMessage());
@@ -216,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             new AlertDialog.Builder(this)
                     .setTitle("שגיאה")
-                    .setMessage(msg)
+                    .setMessage(msg != null ? msg : "שגיאה לא ידועה"
                     .setPositiveButton("אישור", null)
                     .show();
         } catch (Exception ignored) {}
