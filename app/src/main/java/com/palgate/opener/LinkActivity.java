@@ -1,8 +1,9 @@
 package com.palgate.opener;
 
 import android.os.Bundle;
-import android.view.View;
+import android.os.Handler;
 import android.widget.*;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LinkActivity extends AppCompatActivity {
@@ -22,11 +23,12 @@ public class LinkActivity extends AppCompatActivity {
         etTokenType = findViewById(R.id.et_token_type);
         tvStatus    = findViewById(R.id.tv_link_status);
 
-        // Pre-fill if already linked
         if (prefs.isLinked()) {
             etPhone.setText(prefs.getPhone());
             etToken.setText(prefs.getToken());
             etTokenType.setText(String.valueOf(prefs.getTokenType()));
+            tvStatus.setText("מחובר כרגע — ניתן לעדכן");
+            tvStatus.setTextColor(0xFF00C896);
         }
 
         findViewById(R.id.btn_save_link).setOnClickListener(v -> save());
@@ -35,18 +37,18 @@ public class LinkActivity extends AppCompatActivity {
     }
 
     private void save() {
-        String phone = etPhone.getText().toString().trim();
-        String token = etToken.getText().toString().trim();
+        String phone   = etPhone.getText().toString().trim();
+        String token   = etToken.getText().toString().trim();
         String typeStr = etTokenType.getText().toString().trim();
 
         if (phone.isEmpty() || token.isEmpty()) {
-            tvStatus.setText("⚠ יש למלא מספר טלפון וטוקן");
+            tvStatus.setText("יש למלא מספר טלפון וטוקן");
             tvStatus.setTextColor(0xFFFF6B6B);
             return;
         }
 
         if (token.length() != 32) {
-            tvStatus.setText("⚠ הטוקן חייב להיות באורך 32 תווים (כרגע: " + token.length() + ")");
+            tvStatus.setText("הטוקן חייב להיות 32 תווים (כרגע: " + token.length() + ")");
             tvStatus.setTextColor(0xFFFF6B6B);
             return;
         }
@@ -55,30 +57,36 @@ public class LinkActivity extends AppCompatActivity {
         try { tokenType = Integer.parseInt(typeStr); } catch (Exception ignored) {}
 
         prefs.saveCredentials(phone, token, tokenType);
-        tvStatus.setText("✓ החיבור נשמר בהצלחה!");
+        tvStatus.setText("החיבור נשמר בהצלחה!");
         tvStatus.setTextColor(0xFF00C896);
 
         setResult(RESULT_OK);
-        new android.os.Handler().postDelayed(this::finish, 1000);
+        new Handler().postDelayed(this::finish, 1200);
     }
 
     private void showHowTo() {
-        new androidx.appcompat.app.AlertDialog.Builder(this)
+        try {
+            new AlertDialog.Builder(this)
                 .setTitle("איך מקבלים טוקן?")
                 .setMessage(
-                    "1. התקן Python על המחשב (python.org)\n\n" +
-                    "2. הורד את הסקריפט:\n" +
+                    "שלב 1: התקן Python\n" +
+                    "הורד מ-python.org ובחר 'Add to PATH'\n\n" +
+                    "שלב 2: הורד את הסקריפט\n" +
                     "github.com/DonutByte/pylgate\n" +
-                    "→ examples → generate_linked_device_session_token.py\n\n" +
-                    "3. התקן דרישות:\n" +
+                    "examples/generate_linked_device_session_token.py\n\n" +
+                    "שלב 3: התקן תלויות\n" +
                     "pip install qrcode requests\n\n" +
-                    "4. הרץ את הסקריפט:\n" +
+                    "שלב 4: הרץ את הסקריפט\n" +
                     "python generate_linked_device_session_token.py\n\n" +
-                    "5. סרוק את קוד ה-QR באפליקציית PalGate:\n" +
-                    "☰ → מכשירים מקושרים → קשר מכשיר\n\n" +
-                    "6. הסקריפט ידפיס את הטוקן — הכנס אותו כאן"
+                    "שלב 5: סרוק QR באפליקציית PalGate\n" +
+                    "תפריט -> מכשירים מקושרים -> קשר מכשיר\n\n" +
+                    "שלב 6: העתק את הטוקן שמודפס למסך\n" +
+                    "והכנס אותו כאן יחד עם מספר הטלפון"
                 )
                 .setPositiveButton("הבנתי", null)
                 .show();
+        } catch (Exception e) {
+            Toast.makeText(this, "שגיאה: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }
