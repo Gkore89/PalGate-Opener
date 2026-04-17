@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0A0A">
+    android:background="#0A0A0A"
+    android:layoutDirection="rtl">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,20 +15,19 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="PalGate Opener"
+            android:text="פותח שערים"
             android:textColor="#FFFFFF"
-            android:textSize="26sp"
+            android:textSize="28sp"
             android:fontFamily="sans-serif-light"
-            android:letterSpacing="0.05"
             android:layout_marginBottom="4dp"/>
 
         <TextView
+            android:id="@+id/tv_linked_as"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_phone"
             android:textColor="#666666"
             android:textSize="13sp"
-            android:layout_marginBottom="32dp"/>
+            android:layout_marginBottom="28dp"/>
 
         <!-- Status Card -->
         <LinearLayout
@@ -46,17 +46,17 @@
                 android:layout_marginBottom="8dp">
 
                 <ImageView
-                    android:id="@+id/iv_status_dot"
+                    android:id="@+id/iv_dot"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/dot_green"
+                    android:src="@drawable/dot_red"
                     android:layout_marginEnd="10dp"/>
 
                 <TextView
                     android:id="@+id/tv_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Starting..."
+                    android:text="מאתחל..."
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"/>
@@ -66,98 +66,74 @@
                 android:id="@+id/tv_last_event"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Last: None"
-                android:textColor="#888888"
+                android:text="אחרון: אין"
+                android:textColor="#666666"
                 android:textSize="13sp"/>
         </LinearLayout>
 
-        <!-- Gate Info -->
-        <LinearLayout
+        <!-- Link Button -->
+        <Button
+            android:id="@+id/btn_link"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/card_bg"
-            android:padding="20dp"
-            android:orientation="vertical"
-            android:layout_marginBottom="24dp">
+            android:layout_height="56dp"
+            android:layout_marginBottom="12dp"
+            android:text="קשר חשבון PalGate"
+            android:textColor="#000000"
+            android:backgroundTint="#00C896"
+            android:textAllCaps="false"
+            android:textSize="16sp"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="GATES"
-                android:textColor="#444444"
-                android:textSize="11sp"
-                android:letterSpacing="0.15"
-                android:layout_marginBottom="12dp"/>
-
-            <TextView
-                android:id="@+id/tv_gate1_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#CCCCCC"
-                android:textSize="14sp"
-                android:fontFamily="monospace"
-                android:layout_marginBottom="6dp"/>
-
-            <TextView
-                android:id="@+id/tv_gate2_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#CCCCCC"
-                android:textSize="14sp"
-                android:fontFamily="monospace"/>
-        </LinearLayout>
-
-        <!-- Manual Buttons -->
+        <!-- Gate Buttons -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="MANUAL OVERRIDE"
+            android:text="פתיחה ידנית"
             android:textColor="#444444"
             android:textSize="11sp"
-            android:letterSpacing="0.15"
-            android:layout_marginBottom="12dp"/>
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="32dp">
+            android:layout_marginBottom="24dp">
 
             <Button
-                android:id="@+id/btn_open_gate1"
+                android:id="@+id/btn_gate1"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:text="Open Gate 1"
+                android:text="פתח שער 1"
                 android:textColor="#000000"
                 android:backgroundTint="#00C896"
                 android:textAllCaps="false"
-                android:textSize="15sp"/>
+                android:enabled="false"/>
 
             <Button
-                android:id="@+id/btn_open_gate2"
+                android:id="@+id/btn_gate2"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:text="Open Gate 2"
+                android:text="פתח שער 2"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#1E1E1E"
                 android:textAllCaps="false"
-                android:textSize="15sp"/>
+                android:enabled="false"/>
         </LinearLayout>
 
-        <!-- Settings Button -->
+        <!-- Settings -->
         <Button
             android:id="@+id/btn_settings"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:text="⚙ Settings"
-            android:textColor="#888888"
+            android:layout_height="48dp"
+            android:text="⚙ הגדרות"
+            android:textColor="#666666"
             android:backgroundTint="#111111"
             android:textAllCaps="false"
-            android:textSize="15sp"/>
+            android:textSize="14sp"/>
 
     </LinearLayout>
 </ScrollView>

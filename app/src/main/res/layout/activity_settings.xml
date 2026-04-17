@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0A0A">
+    android:background="#0A0A0A"
+    android:layoutDirection="rtl">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,138 +11,108 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- ── CREDENTIALS ── -->
-        <TextView style="@style/SectionLabel" android:text="PALGATE CREDENTIALS"/>
+        <!-- SERVICE -->
+        <TextView style="@style/SectionLabel" android:text="כללי"/>
 
-        <TextView style="@style/FieldLabel" android:text="Phone Number (international, no +)"/>
-        <EditText android:id="@+id/et_phone" style="@style/FieldInput"
-            android:hint="972501234567" android:inputType="phone"/>
-
-        <TextView style="@style/FieldLabel" android:text="Session Token"/>
-        <EditText android:id="@+id/et_token" style="@style/FieldInput"
-            android:hint="32-character hex string" android:inputType="textNoSuggestions"/>
-
-        <TextView style="@style/FieldLabel" android:text="Token Type (0=SMS, 1=Primary, 2=Secondary)"/>
-        <EditText android:id="@+id/et_token_type" style="@style/FieldInput"
-            android:hint="1" android:inputType="number"/>
-
-        <View style="@style/Divider"/>
-
-        <!-- ── GATES ── -->
-        <TextView style="@style/SectionLabel" android:text="GATE 1 (MAIN)"/>
-
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="Enabled"
-                android:textColor="#AAAAAA" android:textSize="14sp"/>
-            <Switch android:id="@+id/sw_gate1_enabled" android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <LinearLayout style="@style/RowLayout">
+            <TextView style="@style/RowLabel" android:text="שירות רקע פעיל"/>
+            <Switch android:id="@+id/sw_service" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <TextView style="@style/FieldLabel" android:text="Device ID"/>
-        <EditText android:id="@+id/et_gate1_id" style="@style/FieldInput"
-            android:hint="4G600104640" android:inputType="textNoSuggestions"/>
+        <!-- GATES -->
+        <TextView style="@style/SectionLabel" android:text="שערים"/>
 
-        <TextView style="@style/FieldLabel" android:text="Latitude"/>
-        <EditText android:id="@+id/et_gate1_lat" style="@style/FieldInput"
-            android:hint="32.058935" android:inputType="numberDecimal"/>
-
-        <TextView style="@style/FieldLabel" android:text="Longitude"/>
-        <EditText android:id="@+id/et_gate1_lon" style="@style/FieldInput"
-            android:hint="34.862667" android:inputType="numberDecimal"/>
-
-        <TextView style="@style/SectionLabel" android:text="GATE 2"/>
-
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="Enabled"
-                android:textColor="#AAAAAA" android:textSize="14sp"/>
-            <Switch android:id="@+id/sw_gate2_enabled" android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <LinearLayout style="@style/RowLayout">
+            <TextView style="@style/RowLabel" android:text="שער 1 פעיל (כניסה ראשית)"/>
+            <Switch android:id="@+id/sw_gate1" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <TextView style="@style/FieldLabel" android:text="Device ID"/>
-        <EditText android:id="@+id/et_gate2_id" style="@style/FieldInput"
-            android:hint="4G600104641" android:inputType="textNoSuggestions"/>
+        <LinearLayout style="@style/RowLayout">
+            <TextView style="@style/RowLabel" android:text="שער 2 פעיל"/>
+            <Switch android:id="@+id/sw_gate2" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </LinearLayout>
 
-        <TextView style="@style/FieldLabel" android:text="Latitude"/>
-        <EditText android:id="@+id/et_gate2_lat" style="@style/FieldInput"
-            android:hint="32.057775" android:inputType="numberDecimal"/>
+        <!-- VEHICLE 1 -->
+        <TextView style="@style/SectionLabel" android:text="רכב ראשי"/>
 
-        <TextView style="@style/FieldLabel" android:text="Longitude"/>
-        <EditText android:id="@+id/et_gate2_lon" style="@style/FieldInput"
-            android:hint="34.863480" android:inputType="numberDecimal"/>
+        <TextView style="@style/FieldLabel" android:text="Bluetooth נבחר:"/>
+        <TextView
+            android:id="@+id/tv_v1_bt_current"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#00C896"
+            android:textSize="14sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="8dp"/>
 
-        <View style="@style/Divider"/>
+        <Button
+            android:id="@+id/btn_pick_bt"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="בחר רכב מרשימת Bluetooth"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#1E1E1E"
+            android:textAllCaps="false"
+            android:layout_marginBottom="16dp"/>
 
-        <!-- ── VEHICLE 1 ── -->
-        <TextView style="@style/SectionLabel" android:text="VEHICLE 1"/>
-
-        <TextView style="@style/FieldLabel" android:text="Bluetooth Name (exact)"/>
-        <EditText android:id="@+id/et_v1_bt" style="@style/FieldInput"
-            android:hint="Tesla Model 3 Tesly"/>
-
-        <TextView style="@style/FieldLabel" android:text="Parking WiFi SSID"/>
-        <EditText android:id="@+id/et_v1_wifi" style="@style/FieldInput"
-            android:hint="KingShaul6"/>
-
-        <View style="@style/Divider"/>
-
-        <!-- ── VEHICLE 2 ── -->
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+        <!-- VEHICLE 2 -->
+        <LinearLayout style="@style/RowLayout">
             <TextView style="@style/SectionLabel" android:layout_width="0dp"
-                android:layout_weight="1" android:text="VEHICLE 2" android:layout_marginBottom="0dp"/>
-            <Switch android:id="@+id/sw_v2_enabled" android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_weight="1" android:text="רכב שני" android:layout_marginBottom="0dp"/>
+            <Switch android:id="@+id/sw_v2" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <LinearLayout android:id="@+id/layout_v2_fields"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="vertical" android:visibility="gone">
+        <LinearLayout android:id="@+id/layout_v2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <TextView style="@style/FieldLabel" android:text="Bluetooth Name (exact)"/>
-            <EditText android:id="@+id/et_v2_bt" style="@style/FieldInput"
-                android:hint="My Other Car"/>
+            <TextView style="@style/FieldLabel" android:text="Bluetooth רכב שני:"/>
+            <EditText android:id="@+id/et_v2_bt" style="@style/FieldInput" android:hint="שם Bluetooth"/>
 
-            <TextView style="@style/FieldLabel" android:text="Parking WiFi SSID"/>
-            <EditText android:id="@+id/et_v2_wifi" style="@style/FieldInput"
-                android:hint="ParkingWiFi"/>
+            <Button
+                android:id="@+id/btn_pick_bt2"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="בחר רכב שני מרשימת Bluetooth"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#1E1E1E"
+                android:textAllCaps="false"
+                android:layout_marginBottom="16dp"/>
         </LinearLayout>
 
-        <View style="@style/Divider"/>
+        <!-- NETWORK -->
+        <TextView style="@style/SectionLabel" android:text="רשת WiFi"/>
+        <TextView style="@style/FieldLabel" android:text="שם רשת חניון (SSID):"/>
+        <EditText android:id="@+id/et_wifi" style="@style/FieldInput" android:hint="KingShaul6"/>
 
-        <!-- ── TRIGGER SETTINGS ── -->
-        <TextView style="@style/SectionLabel" android:text="TRIGGER SETTINGS"/>
+        <!-- TRIGGER SETTINGS -->
+        <TextView style="@style/SectionLabel" android:text="הגדרות טריגר"/>
 
-        <TextView style="@style/FieldLabel" android:text="Enter geofence radius (meters)"/>
-        <EditText android:id="@+id/et_enter_radius" style="@style/FieldInput"
+        <TextView style="@style/FieldLabel" android:text="רדיוס כניסה (מטרים):"/>
+        <EditText android:id="@+id/et_radius" style="@style/FieldInput"
             android:hint="80" android:inputType="number"/>
 
-        <TextView style="@style/FieldLabel" android:text="Min speed to trigger entry (km/h)"/>
+        <TextView style="@style/FieldLabel" android:text="מהירות מינימלית לכניסה (קמ&#34;ש):"/>
         <EditText android:id="@+id/et_enter_speed" style="@style/FieldInput"
             android:hint="10" android:inputType="number"/>
 
-        <TextView style="@style/FieldLabel" android:text="Min speed to trigger exit (km/h)"/>
+        <TextView style="@style/FieldLabel" android:text="מהירות מינימלית ליציאה (קמ&#34;ש):"/>
         <EditText android:id="@+id/et_exit_speed" style="@style/FieldInput"
             android:hint="10" android:inputType="number"/>
 
-        <TextView style="@style/FieldLabel" android:text="Cooldown between triggers (seconds)"/>
+        <TextView style="@style/FieldLabel" android:text="זמן המתנה בין פתיחות (שניות):"/>
         <EditText android:id="@+id/et_cooldown" style="@style/FieldInput"
             android:hint="60" android:inputType="number"/>
 
-        <!-- Save Button -->
+        <!-- Save -->
         <Button
             android:id="@+id/btn_save"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="24dp"
-            android:text="Save Settings"
+            android:layout_marginTop="16dp"
+            android:text="שמור הגדרות"
             android:textColor="#000000"
             android:backgroundTint="#00C896"
             android:textAllCaps="false"
