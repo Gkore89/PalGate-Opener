@@ -25,7 +25,7 @@ public class GateMonitorService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override public IBinder onBind(Intent i) { return null; }
