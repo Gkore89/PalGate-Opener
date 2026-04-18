@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0A0A"
+    android:background="#0D0D0D"
     android:layoutDirection="rtl">
 
     <LinearLayout
@@ -16,20 +16,23 @@
 
         <LinearLayout style="@style/RowLayout">
             <TextView style="@style/RowLabel" android:text="שירות רקע פעיל"/>
-            <Switch android:id="@+id/sw_service" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <Switch android:id="@+id/sw_service" android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <!-- GATES -->
         <TextView style="@style/SectionLabel" android:text="שערים"/>
 
         <LinearLayout style="@style/RowLayout">
-            <TextView style="@style/RowLabel" android:text="שער 1 פעיל (כניסה ראשית)"/>
-            <Switch android:id="@+id/sw_gate1" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView style="@style/RowLabel" android:text="שער צפון פעיל"/>
+            <Switch android:id="@+id/sw_gate1" android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout style="@style/RowLayout">
-            <TextView style="@style/RowLabel" android:text="שער 2 פעיל"/>
-            <Switch android:id="@+id/sw_gate2" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView style="@style/RowLabel" android:text="שער דרום פעיל"/>
+            <Switch android:id="@+id/sw_gate2" android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <!-- VEHICLE 1 -->
@@ -59,7 +62,8 @@
         <LinearLayout style="@style/RowLayout">
             <TextView style="@style/SectionLabel" android:layout_width="0dp"
                 android:layout_weight="1" android:text="רכב שני" android:layout_marginBottom="0dp"/>
-            <Switch android:id="@+id/sw_v2" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <Switch android:id="@+id/sw_v2" android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout android:id="@+id/layout_v2"
@@ -69,7 +73,8 @@
             android:visibility="gone">
 
             <TextView style="@style/FieldLabel" android:text="Bluetooth רכב שני:"/>
-            <EditText android:id="@+id/et_v2_bt" style="@style/FieldInput" android:hint="שם Bluetooth"/>
+            <EditText android:id="@+id/et_v2_bt" style="@style/FieldInput"
+                android:hint="שם Bluetooth"/>
 
             <Button
                 android:id="@+id/btn_pick_bt2"
@@ -82,7 +87,7 @@
                 android:layout_marginBottom="16dp"/>
         </LinearLayout>
 
-        <!-- NETWORK -->
+        <!-- WIFI -->
         <TextView style="@style/SectionLabel" android:text="רשת WiFi"/>
         <TextView style="@style/FieldLabel" android:text="שם רשת חניון (SSID):"/>
         <EditText android:id="@+id/et_wifi" style="@style/FieldInput" android:hint="KingShaul6"/>
@@ -94,11 +99,11 @@
         <EditText android:id="@+id/et_radius" style="@style/FieldInput"
             android:hint="80" android:inputType="number"/>
 
-        <TextView style="@style/FieldLabel" android:text="מהירות מינימלית לכניסה (קמ&#34;ש):"/>
+        <TextView style="@style/FieldLabel" android:text="מהירות מינימלית לכניסה (קמ/ש):"/>
         <EditText android:id="@+id/et_enter_speed" style="@style/FieldInput"
             android:hint="10" android:inputType="number"/>
 
-        <TextView style="@style/FieldLabel" android:text="מהירות מינימלית ליציאה (קמ&#34;ש):"/>
+        <TextView style="@style/FieldLabel" android:text="מהירות מינימלית ליציאה (קמ/ש):"/>
         <EditText android:id="@+id/et_exit_speed" style="@style/FieldInput"
             android:hint="10" android:inputType="number"/>
 
@@ -106,7 +111,6 @@
         <EditText android:id="@+id/et_cooldown" style="@style/FieldInput"
             android:hint="60" android:inputType="number"/>
 
-        <!-- Save -->
         <Button
             android:id="@+id/btn_save"
             android:layout_width="match_parent"

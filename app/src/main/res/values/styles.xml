@@ -8,12 +8,11 @@
         <item name="android:windowBackground">#0D0D0D</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="android:textColorSecondary">#CCCCCC</item>
-        <!-- Force light dialogs so text is visible -->
+        <item name="android:layoutDirection">rtl</item>
         <item name="alertDialogTheme">@style/LightDialog</item>
         <item name="android:alertDialogTheme">@style/LightDialog</item>
     </style>
 
-    <!-- Light dialog so text is always visible -->
     <style name="LightDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">#00C896</item>
         <item name="android:textColorPrimary">#111111</item>
@@ -29,6 +28,8 @@
         <item name="android:letterSpacing">0.12</item>
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textAlignment">textEnd</item>
     </style>
 
     <style name="FieldLabel">
@@ -37,6 +38,8 @@
         <item name="android:textColor">#CCCCCC</item>
         <item name="android:textSize">13sp</item>
         <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textAlignment">textEnd</item>
     </style>
 
     <style name="FieldInput">
@@ -48,6 +51,8 @@
         <item name="android:background">@drawable/input_bg</item>
         <item name="android:padding">12dp</item>
         <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textAlignment">textEnd</item>
     </style>
 
     <style name="RowLayout">
@@ -64,6 +69,8 @@
         <item name="android:layout_weight">1</item>
         <item name="android:textColor">#DDDDDD</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textAlignment">textEnd</item>
     </style>
 
 </resources>

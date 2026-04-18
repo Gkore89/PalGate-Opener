@@ -4,6 +4,7 @@ import android.Manifest;
 import android.bluetooth.*;
 import android.content.*;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.*;
 import android.widget.*;
 import android.view.*;
@@ -23,10 +24,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageView ivDot;
     private View btnLink, btnOpenGate1, btnOpenGate2, btnSettings;
     private AppPrefs prefs;
+    private Handler mainHandler;
 
     private final BroadcastReceiver statusReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context ctx, Intent intent) {
+        @Override public void onReceive(Context ctx, Intent intent) {
             try {
                 updateStatus(
                     intent.getStringExtra(GateMonitorService.EXTRA_STATUS),
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             setContentView(R.layout.activity_main);
             prefs = new AppPrefs(this);
+            mainHandler = new Handler(Looper.getMainLooper());
 
             tvStatus     = findViewById(R.id.tv_status);
             tvLastEvent  = findViewById(R.id.tv_last_event);
@@ -52,8 +54,14 @@ public class MainActivity extends AppCompatActivity {
             btnSettings  = findViewById(R.id.btn_settings);
 
             btnLink.setOnClickListener(v -> openLinking());
-            btnOpenGate1.setOnClickListener(v -> manualOpen(prefs.getGate1Id(), "שער צפון"));
-            btnOpenGate2.setOnClickListener(v -> manualOpen(prefs.getGate2Id(), "שער דרום"));
+            btnOpenGate1.setOnClickListener(v -> {
+                flashGreen(btnOpenGate1, R.drawable.gate_btn_north_active, R.drawable.gate_btn_south);
+                manualOpen(prefs.getGate1Id(), "שער צפון");
+            });
+            btnOpenGate2.setOnClickListener(v -> {
+                flashGreen(btnOpenGate2, R.drawable.gate_btn_south_active, R.drawable.gate_btn_south);
+                manualOpen(prefs.getGate2Id(), "שער דרום");
+            });
             btnSettings.setOnClickListener(v ->
                     startActivity(new Intent(this, SettingsActivity.class)));
 
@@ -65,8 +73,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
+    @Override protected void onResume() {
         super.onResume();
         try {
             registerReceiver(statusReceiver,
@@ -75,14 +82,12 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception ignored) {}
     }
 
-    @Override
-    protected void onPause() {
+    @Override protected void onPause() {
         super.onPause();
         try { unregisterReceiver(statusReceiver); } catch (Exception ignored) {}
     }
 
-    @Override
-    protected void onActivityResult(int req, int res, Intent data) {
+    @Override protected void onActivityResult(int req, int res, Intent data) {
         super.onActivityResult(req, res, data);
         if (req == REQ_LINK && res == RESULT_OK) {
             refreshUI();
@@ -90,12 +95,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /** Flash button green for 2 seconds then restore */
+    private void flashGreen(View btn, int activeDrawable, int restoreDrawable) {
+        try {
+            btn.setBackgroundResource(activeDrawable);
+            mainHandler.postDelayed(() -> {
+                try { btn.setBackgroundResource(restoreDrawable); } catch (Exception ignored) {}
+            }, 2000);
+        } catch (Exception ignored) {}
+    }
+
     private void openLinking() {
         try {
             startActivityForResult(new Intent(this, LinkActivity.class), REQ_LINK);
-        } catch (Exception e) {
-            showError("שגיאה: " + e.getMessage());
-        }
+        } catch (Exception e) { showError("שגיאה: " + e.getMessage()); }
     }
 
     private void manualOpen(String gateId, String gateName) {
@@ -109,9 +122,7 @@ public class MainActivity extends AppCompatActivity {
             i.putExtra(GateMonitorService.EXTRA_GATE_ID, gateId);
             startService(i);
             tvStatus.setText("פותח " + gateName + "...");
-        } catch (Exception e) {
-            showError("שגיאה: " + e.getMessage());
-        }
+        } catch (Exception e) { showError("שגיאה: " + e.getMessage()); }
     }
 
     private void showBtPicker() {
@@ -153,8 +164,6 @@ public class MainActivity extends AppCompatActivity {
             tvLinkedAs.setText(linked
                     ? "מחובר: " + phone + (bt.isEmpty() ? "" : " | " + bt)
                     : "לא מחובר");
-
-            btnLink.setAlpha(1f);
 
             if (btnOpenGate1 != null) btnOpenGate1.setAlpha(linked ? 1f : 0.4f);
             if (btnOpenGate2 != null) btnOpenGate2.setAlpha(linked ? 1f : 0.4f);
@@ -212,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
                     needed.add(p);
             if (!needed.isEmpty())
                 ActivityCompat.requestPermissions(this, needed.toArray(new String[0]), 100);
-
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                     != PackageManager.PERMISSION_GRANTED)
