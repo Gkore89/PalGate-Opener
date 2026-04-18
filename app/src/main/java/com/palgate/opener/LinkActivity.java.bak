@@ -57,9 +57,13 @@ public class LinkActivity extends AppCompatActivity {
 
         new Thread(() -> {
             try {
+                // Step 1: Generate UUID
                 String uniqueId = UUID.randomUUID().toString();
+
+                // Step 2: Build QR content (exact format from pylgate)
                 String qrContent = "{\"id\": \"" + uniqueId + "\"}";
 
+                // Step 3: Show QR code
                 Bitmap qrBitmap = generateQrBitmap(qrContent, 600);
                 mainHandler.post(() -> {
                     ivQr.setImageBitmap(qrBitmap);
@@ -67,6 +71,8 @@ public class LinkActivity extends AppCompatActivity {
                               "תפריט ☰ → מכשירים מקושרים → קשר מכשיר", 0xFFCCCCCC);
                 });
 
+                // Step 4: GET /un/secondary/init/<uuid> — blocks until scan
+                // This endpoint returns immediately with the credentials once scanned
                 mainHandler.post(() -> setStatus(
                     "ממתין לסריקה...\n\nסרוק את הקוד באפליקציית PalGate", 0xFFCCCCCC));
 
@@ -79,6 +85,7 @@ public class LinkActivity extends AppCompatActivity {
                     throw new Exception("תגובה שגויה מהשרת: " + (initResp != null ? initResp.toString() : "null"));
                 }
 
+                // Parse response
                 JSONObject user = initResp.getJSONObject("user");
                 String phone = user.getString("id");
                 String tokenHex = user.getString("token");
@@ -86,19 +93,17 @@ public class LinkActivity extends AppCompatActivity {
 
                 mainHandler.post(() -> setStatus("מאמת את החיבור...", 0xFFAAAAAA));
 
+                // Step 5: Check status to confirm
                 String derivedToken = PalGateTokenGenerator.generateDerivedToken(
                         phone, tokenHex, tokenType);
                 getJsonAuth(BASE_URL + "secondary/status", derivedToken);
 
+                // Step 6: Save credentials
                 prefs.saveCredentials(phone, tokenHex, tokenType);
-
-                // Display phone in local format for friendliness
-                String displayPhone = phone.startsWith("972")
-                        ? "0" + phone.substring(3) : phone;
 
                 mainHandler.post(() -> {
                     ivQr.setImageBitmap(null);
-                    setStatus("החיבור הצליח!\nמספר: " + displayPhone, 0xFF00C896);
+                    setStatus("החיבור הצליח!\nמספר: " + phone, 0xFF00C896);
                     btnRetry.setVisibility(View.GONE);
                     setResult(RESULT_OK);
                     new Handler().postDelayed(this::finish, 1500);
@@ -119,13 +124,15 @@ public class LinkActivity extends AppCompatActivity {
         tvStatus.setTextColor(color);
     }
 
+    // ── HTTP helpers ──────────────────────────────────────────────
+
     private JSONObject getJson(String urlStr) throws Exception {
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("User-Agent", USER_AGENT);
         conn.setConnectTimeout(10000);
-        conn.setReadTimeout(60000);
+        conn.setReadTimeout(60000); // long timeout — waits for QR scan
         int code = conn.getResponseCode();
         InputStream is = code >= 200 && code < 300
                 ? conn.getInputStream() : conn.getErrorStream();
@@ -159,18 +166,25 @@ public class LinkActivity extends AppCompatActivity {
         return sb.toString();
     }
 
+    // ── QR code generator using ZXing ────────────────────────────
+
     private Bitmap generateQrBitmap(String content, int size) {
         try {
+            // Use ZXing via reflection (included in dependencies)
             Class<?> writerClass = Class.forName("com.google.zxing.qrcode.QRCodeWriter");
             Object writer = writerClass.newInstance();
+
             Class<?> formatClass = Class.forName("com.google.zxing.BarcodeFormat");
             Object qrFormat = formatClass.getField("QR_CODE").get(null);
+
             java.lang.reflect.Method encode = writerClass.getMethod("encode",
                     String.class, qrFormat.getClass(), int.class, int.class);
             Object bitMatrix = encode.invoke(writer, content, qrFormat, size, size);
+
             java.lang.reflect.Method getWidth  = bitMatrix.getClass().getMethod("getWidth");
             java.lang.reflect.Method getHeight = bitMatrix.getClass().getMethod("getHeight");
             java.lang.reflect.Method get       = bitMatrix.getClass().getMethod("get", int.class, int.class);
+
             int w = (int) getWidth.invoke(bitMatrix);
             int h = (int) getHeight.invoke(bitMatrix);
             int[] pixels = new int[w * h];
@@ -178,8 +192,11 @@ public class LinkActivity extends AppCompatActivity {
                 for (int x = 0; x < w; x++)
                     pixels[y * w + x] = (boolean) get.invoke(bitMatrix, x, y)
                             ? Color.BLACK : Color.WHITE;
+
             return Bitmap.createBitmap(pixels, w, h, Bitmap.Config.RGB_565);
+
         } catch (Exception e) {
+            // Fallback: simple placeholder
             Bitmap bmp = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565);
             Canvas canvas = new Canvas(bmp);
             canvas.drawColor(Color.WHITE);
