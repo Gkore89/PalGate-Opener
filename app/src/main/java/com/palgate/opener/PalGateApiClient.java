@@ -40,7 +40,9 @@ public class PalGateApiClient {
                 int code = conn.getResponseCode();
                 conn.disconnect();
                 if (code >= 200 && code < 300) cb.onSuccess(gateId);
-                else cb.onFailure(gateId, "HTTP " + code);
+                else   (InputStream errStream = conn.getErrorStream();
+                        String errBody = errStream != null ? readStream(errStream) : "";
+                        cb.onFailure(gateId, "HTTP " + responseCode + ": " + errBody);)
             } catch (Exception e) {
                 Log.e(TAG, "openGate error", e);
                 cb.onFailure(gateId, e.getMessage());
@@ -49,7 +51,14 @@ public class PalGateApiClient {
     }
 
     // ── PalGate device linking via QR ────────────────────────────
-
+    private static String readStream(InputStream is) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) sb.append(line);
+        return sb.toString();
+    }
+   
     public static void startLinking(LinkCallback cb) {
         new Thread(() -> {
             try {
