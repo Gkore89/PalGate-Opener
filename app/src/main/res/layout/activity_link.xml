@@ -11,7 +11,6 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Title -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,8 +18,8 @@
             android:textColor="#FFFFFF"
             android:textSize="22sp"
             android:fontFamily="sans-serif-medium"
-            android:gravity="center"
             android:textAlignment="center"
+            android:gravity="center"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="20dp"/>
 
@@ -43,8 +42,8 @@
             android:text=""
             android:textColor="#AAAAAA"
             android:textSize="13sp"
-            android:gravity="center"
             android:textAlignment="center"
+            android:gravity="center"
             android:layout_marginBottom="12dp"/>
 
         <!-- Share button -->
@@ -52,7 +51,7 @@
             android:id="@+id/btn_share"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:text="&#128228;  שלח QR למחשב / טאבלט"
+            android:text="שלח QR למחשב / טאבלט"
             android:textColor="#000000"
             android:backgroundTint="#00C896"
             android:textAllCaps="false"
@@ -60,7 +59,7 @@
             android:visibility="gone"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Waiting instructions -->
+        <!-- Waiting instructions - RTL fixed -->
         <LinearLayout
             android:id="@+id/layout_waiting"
             android:layout_width="match_parent"
@@ -78,103 +77,108 @@
                 android:textColor="#00C896"
                 android:textSize="13sp"
                 android:fontFamily="sans-serif-medium"
-                android:gravity="end"
                 android:textAlignment="textEnd"
+                android:gravity="end"
                 android:layout_marginBottom="12dp"/>
 
+            <!-- Step 1 -->
             <LinearLayout android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_marginBottom="10dp">
+                <TextView android:layout_width="28dp" android:layout_height="28dp"
+                    android:text="1" android:textColor="#0D0D0D" android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold" android:gravity="center"
+                    android:background="@drawable/dot_green" android:layout_marginEnd="10dp"/>
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="לחץ שלח QR ושלח את התמונה לעצמך (וואטסאפ / מייל)"
                     android:textColor="#CCCCCC" android:textSize="13sp"
-                    android:gravity="end" android:textAlignment="textEnd"/>
-                <TextView android:layout_width="32dp" android:layout_height="wrap_content"
-                    android:text="1" android:textColor="#00C896" android:textSize="18sp"
-                    android:fontFamily="sans-serif-bold" android:gravity="center"
-                    android:layout_marginStart="8dp"/>
+                    android:textAlignment="textEnd" android:gravity="end"/>
             </LinearLayout>
 
+            <!-- Step 2 -->
             <LinearLayout android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_marginBottom="10dp">
+                <TextView android:layout_width="28dp" android:layout_height="28dp"
+                    android:text="2" android:textColor="#0D0D0D" android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold" android:gravity="center"
+                    android:background="@drawable/dot_green" android:layout_marginEnd="10dp"/>
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="פתח את התמונה במחשב, טאבלט, או טלוויזיה חכמה"
                     android:textColor="#CCCCCC" android:textSize="13sp"
-                    android:gravity="end" android:textAlignment="textEnd"/>
-                <TextView android:layout_width="32dp" android:layout_height="wrap_content"
-                    android:text="2" android:textColor="#00C896" android:textSize="18sp"
-                    android:fontFamily="sans-serif-bold" android:gravity="center"
-                    android:layout_marginStart="8dp"/>
+                    android:textAlignment="textEnd" android:gravity="end"/>
             </LinearLayout>
 
+            <!-- Step 3 -->
             <LinearLayout android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_marginBottom="10dp">
+                <TextView android:layout_width="28dp" android:layout_height="28dp"
+                    android:text="3" android:textColor="#0D0D0D" android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold" android:gravity="center"
+                    android:background="@drawable/dot_green" android:layout_marginEnd="10dp"/>
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="פתח את אפליקציית PalGate על הטלפון הזה"
                     android:textColor="#CCCCCC" android:textSize="13sp"
-                    android:gravity="end" android:textAlignment="textEnd"/>
-                <TextView android:layout_width="32dp" android:layout_height="wrap_content"
-                    android:text="3" android:textColor="#00C896" android:textSize="18sp"
-                    android:fontFamily="sans-serif-bold" android:gravity="center"
-                    android:layout_marginStart="8dp"/>
+                    android:textAlignment="textEnd" android:gravity="end"/>
             </LinearLayout>
 
+            <!-- Step 4 -->
             <LinearLayout android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_marginBottom="10dp">
+                <TextView android:layout_width="28dp" android:layout_height="28dp"
+                    android:text="4" android:textColor="#0D0D0D" android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold" android:gravity="center"
+                    android:background="@drawable/dot_green" android:layout_marginEnd="10dp"/>
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="☰ → מכשירים מקושרים → קשר מכשיר"
+                    android:text="☰ ← מכשירים מקושרים ← קשר מכשיר"
                     android:textColor="#CCCCCC" android:textSize="13sp"
-                    android:gravity="end" android:textAlignment="textEnd"/>
-                <TextView android:layout_width="32dp" android:layout_height="wrap_content"
-                    android:text="4" android:textColor="#00C896" android:textSize="18sp"
-                    android:fontFamily="sans-serif-bold" android:gravity="center"
-                    android:layout_marginStart="8dp"/>
+                    android:textAlignment="textEnd" android:gravity="end"/>
             </LinearLayout>
 
+            <!-- Step 5 -->
             <LinearLayout android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+                <TextView android:layout_width="28dp" android:layout_height="28dp"
+                    android:text="5" android:textColor="#0D0D0D" android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold" android:gravity="center"
+                    android:background="@drawable/dot_green" android:layout_marginEnd="10dp"/>
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="סרוק את קוד ה-QR שמוצג על המסך האחר"
                     android:textColor="#00C896" android:textSize="13sp"
                     android:fontFamily="sans-serif-medium"
-                    android:gravity="end" android:textAlignment="textEnd"/>
-                <TextView android:layout_width="32dp" android:layout_height="wrap_content"
-                    android:text="5" android:textColor="#00C896" android:textSize="18sp"
-                    android:fontFamily="sans-serif-bold" android:gravity="center"
-                    android:layout_marginStart="8dp"/>
+                    android:textAlignment="textEnd" android:gravity="end"/>
             </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="החיבור יאושר אוטומטית לאחר הסריקה"
+                android:text="החיבור יאושר אוטומטית לאחר הסריקה ✓"
                 android:textColor="#666666"
                 android:textSize="12sp"
-                android:gravity="center"
                 android:textAlignment="center"
-                android:layout_marginTop="12dp"/>
+                android:gravity="center"/>
 
         </LinearLayout>
 
-        <!-- Success state -->
+        <!-- Success -->
         <LinearLayout
             android:id="@+id/layout_success"
             android:layout_width="match_parent"
@@ -201,6 +205,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:fontFamily="sans-serif-medium"
+                android:textAlignment="center"
                 android:gravity="center"
                 android:layout_marginBottom="4dp"/>
 
@@ -210,6 +215,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="#00C896"
                 android:textSize="14sp"
+                android:textAlignment="center"
                 android:gravity="center"/>
 
             <Button
@@ -223,7 +229,6 @@
                 android:textAllCaps="false"/>
         </LinearLayout>
 
-        <!-- Retry -->
         <Button
             android:id="@+id/btn_retry"
             android:layout_width="match_parent"
@@ -235,7 +240,6 @@
             android:visibility="gone"
             android:layout_marginBottom="8dp"/>
 
-        <!-- Back -->
         <Button
             android:id="@+id/btn_back"
             android:layout_width="match_parent"

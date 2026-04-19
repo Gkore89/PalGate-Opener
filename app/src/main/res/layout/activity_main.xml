@@ -39,8 +39,8 @@
                     android:textColor="#FFFFFF"
                     android:textSize="26sp"
                     android:fontFamily="sans-serif-light"
-                    android:gravity="end"
-                    android:textAlignment="textEnd"/>
+                    android:textAlignment="textEnd"
+                    android:gravity="end"/>
 
                 <TextView
                     android:id="@+id/tv_linked_as"
@@ -49,8 +49,8 @@
                     android:text="לא מחובר"
                     android:textColor="#AAAAAA"
                     android:textSize="12sp"
-                    android:gravity="end"
-                    android:textAlignment="textEnd"/>
+                    android:textAlignment="textEnd"
+                    android:gravity="end"/>
             </LinearLayout>
 
             <TextView
@@ -97,8 +97,8 @@
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:fontFamily="sans-serif-medium"
-                    android:gravity="end"
-                    android:textAlignment="textEnd"/>
+                    android:textAlignment="textEnd"
+                    android:gravity="end"/>
 
                 <TextView
                     android:id="@+id/tv_last_event"
@@ -108,8 +108,8 @@
                     android:textColor="#AAAAAA"
                     android:textSize="12sp"
                     android:layout_marginTop="2dp"
-                    android:gravity="end"
-                    android:textAlignment="textEnd"/>
+                    android:textAlignment="textEnd"
+                    android:gravity="end"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -134,10 +134,10 @@
             android:textSize="11sp"
             android:letterSpacing="0.12"
             android:layout_marginBottom="10dp"
-            android:gravity="end"
-            android:textAlignment="textEnd"/>
+            android:textAlignment="textEnd"
+            android:gravity="end"/>
 
-        <!-- GATE BUTTONS - both dark -->
+        <!-- GATE BUTTONS -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -220,34 +220,58 @@
                 android:textSize="11sp"
                 android:letterSpacing="0.12"
                 android:layout_marginBottom="10dp"
-                android:gravity="end"
-                android:textAlignment="textEnd"/>
+                android:textAlignment="textEnd"
+                android:gravity="end"/>
 
-            <LinearLayout android:layout_width="match_parent"
+            <!-- Entry row -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_marginBottom="8dp">
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="כניסה: Bluetooth רכב + קרוב לשער + מהירות מעל 10 קמ/ש"
-                    android:textColor="#CCCCCC" android:textSize="12sp"
-                    android:gravity="end" android:textAlignment="textEnd"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="&#128664;" android:textSize="16sp" android:layout_marginStart="10dp"/>
+                    android:textColor="#CCCCCC"
+                    android:textSize="12sp"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="&#128664;"
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp"/>
             </LinearLayout>
 
-            <LinearLayout android:layout_width="match_parent"
+            <!-- Exit row -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="יציאה: WiFi חניון + מהירות מעל 10 קמ/ש"
-                    android:textColor="#CCCCCC" android:textSize="12sp"
-                    android:gravity="end" android:textAlignment="textEnd"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="&#127359;" android:textSize="16sp" android:layout_marginStart="10dp"/>
+                    android:textColor="#CCCCCC"
+                    android:textSize="12sp"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="&#127359;"
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp"/>
             </LinearLayout>
 
         </LinearLayout>

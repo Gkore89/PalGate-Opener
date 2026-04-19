@@ -1,5 +1,6 @@
 package com.palgate.opener;
 
+import android.util.Log;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.ByteBuffer;
@@ -8,19 +9,20 @@ import java.nio.ByteBuffer;
  * PalGate derived-token generator.
  * Matches DonutByte/pylgate generate_token() exactly.
  *
- * pylgate signature: generate_token(session_token: bytes, phone_number: int, token_type: TokenType)
+ * pylgate: generate_token(session_token: bytes, phone_number: int, token_type: TokenType)
  *
  * Plaintext (16 bytes):
- *   - bytes 0-3:  Unix timestamp rounded to 30s, big-endian int32
- *   - bytes 4-11: phone number as big-endian int64 (NOT ASCII string)
- *   - bytes 12-15: zeroes (padding)
+ *   bytes 0-3:   Unix timestamp rounded down to 30s bucket, big-endian int32
+ *   bytes 4-11:  phone number as big-endian int64
+ *   bytes 12-15: zeroes
  *
- * Key: session token bytes (16 bytes from 32-char hex)
+ * Key: session token (16 bytes from 32-char hex)
  * Cipher: AES-128-ECB, no padding
- *
- * Derived token = tokenType (2 hex chars) + encrypted (32 hex chars) = 34 chars total
+ * Output: tokenType (2 hex chars) + AES result (32 hex chars) = 34 chars
  */
 public class PalGateTokenGenerator {
+
+    private static final String TAG = "PalGateToken";
 
     public static String generateDerivedToken(String phoneNumber, String sessionTokenHex, int tokenType)
             throws Exception {
@@ -28,27 +30,29 @@ public class PalGateTokenGenerator {
         long now = System.currentTimeMillis() / 1000L;
         long ts  = now - (now % 30);
 
-        // Phone number as long integer, encoded as big-endian 8 bytes
         long phoneInt = Long.parseLong(phoneNumber.trim());
 
-        // Build 16-byte plaintext: 4 bytes timestamp + 8 bytes phone + 4 bytes zero
         byte[] plaintext = new byte[16];
         ByteBuffer buf = ByteBuffer.wrap(plaintext);
-        buf.putInt((int) ts);       // bytes 0-3
-        buf.putLong(phoneInt);      // bytes 4-11
-        // bytes 12-15 remain zero
+        buf.putInt((int) ts);    // bytes 0-3: timestamp
+        buf.putLong(phoneInt);   // bytes 4-11: phone as int64
+                                 // bytes 12-15: zero padding (already 0)
 
-        // Key = session token hex decoded to 16 bytes
         byte[] keyBytes = hexToBytes(sessionTokenHex);
 
-        // AES-128-ECB encrypt
         SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
         Cipher cipher = Cipher.getInstance("AES/ECB/NoPadding");
         cipher.init(Cipher.ENCRYPT_MODE, keySpec);
         byte[] encrypted = cipher.doFinal(plaintext);
 
-        // Result: 2-char token type + 32-char encrypted hex = 34 chars
-        return String.format("%02x", tokenType) + bytesToHex(encrypted);
+        String derived = String.format("%02x", tokenType) + bytesToHex(encrypted);
+
+        Log.d(TAG, "Token generated: phone=" + phoneNumber
+                + " type=" + tokenType
+                + " ts=" + ts
+                + " derived_prefix=" + derived.substring(0, 4) + "...");
+
+        return derived;
     }
 
     public static byte[] hexToBytes(String hex) {
