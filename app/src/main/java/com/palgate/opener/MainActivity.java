@@ -4,7 +4,6 @@ import android.Manifest;
 import android.bluetooth.*;
 import android.content.*;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.*;
 import android.widget.*;
 import android.view.*;
@@ -21,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQ_LINK = 200;
 
     private TextView tvStatus, tvLastEvent, tvLinkedAs;
+    private TextView tvGate1Label, tvGate2Label;
     private ImageView ivDot;
     private View btnLink, btnOpenGate1, btnOpenGate2, btnSettings;
     private AppPrefs prefs;
@@ -52,14 +52,16 @@ public class MainActivity extends AppCompatActivity {
             btnOpenGate1 = findViewById(R.id.btn_gate1);
             btnOpenGate2 = findViewById(R.id.btn_gate2);
             btnSettings  = findViewById(R.id.btn_settings);
+            tvGate1Label = findViewById(R.id.tv_gate1_label);
+            tvGate2Label = findViewById(R.id.tv_gate2_label);
 
             btnLink.setOnClickListener(v -> openLinking());
             btnOpenGate1.setOnClickListener(v -> {
-                flashGreen(btnOpenGate1, R.drawable.gate_btn_north_active, R.drawable.gate_btn_south);
+                flashButton(btnOpenGate1, tvGate1Label, true);
                 manualOpen(prefs.getGate1Id(), "שער צפון");
             });
             btnOpenGate2.setOnClickListener(v -> {
-                flashGreen(btnOpenGate2, R.drawable.gate_btn_south_active, R.drawable.gate_btn_south);
+                flashButton(btnOpenGate2, tvGate2Label, false);
                 manualOpen(prefs.getGate2Id(), "שער דרום");
             });
             btnSettings.setOnClickListener(v ->
@@ -95,12 +97,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** Flash button green for 2 seconds then restore */
-    private void flashGreen(View btn, int activeDrawable, int restoreDrawable) {
+    /** Flash button green with white text, restore after 2s */
+    private void flashButton(View btn, TextView label, boolean isNorth) {
         try {
-            btn.setBackgroundResource(activeDrawable);
+            btn.setBackgroundResource(R.drawable.gate_btn_active);
+            label.setTextColor(0xFFFFFFFF);
             mainHandler.postDelayed(() -> {
-                try { btn.setBackgroundResource(restoreDrawable); } catch (Exception ignored) {}
+                try {
+                    btn.setBackgroundResource(R.drawable.gate_btn_dark);
+                    label.setTextColor(0xFFFFFFFF);
+                } catch (Exception ignored) {}
             }, 2000);
         } catch (Exception ignored) {}
     }
@@ -161,8 +167,10 @@ public class MainActivity extends AppCompatActivity {
             String phone = prefs.getPhone();
             String bt = prefs.getV1BtName();
 
+            // Show local format
+            String displayPhone = phone.startsWith("972") ? "0" + phone.substring(3) : phone;
             tvLinkedAs.setText(linked
-                    ? "מחובר: " + phone + (bt.isEmpty() ? "" : " | " + bt)
+                    ? "מחובר: " + displayPhone + (bt.isEmpty() ? "" : " | " + bt)
                     : "לא מחובר");
 
             if (btnOpenGate1 != null) btnOpenGate1.setAlpha(linked ? 1f : 0.4f);

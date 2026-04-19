@@ -17,8 +17,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp">
 
             <ImageView
                 android:layout_width="48dp"
@@ -33,23 +33,24 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="פותח שערים"
                     android:textColor="#FFFFFF"
                     android:textSize="26sp"
                     android:fontFamily="sans-serif-light"
-                    android:textDirection="rtl"
-                    android:layoutDirection="rtl"/>
+                    android:gravity="end"
+                    android:textAlignment="textEnd"/>
 
                 <TextView
                     android:id="@+id/tv_linked_as"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="לא מחובר"
                     android:textColor="#AAAAAA"
                     android:textSize="12sp"
-                    android:textDirection="rtl"/>
+                    android:gravity="end"
+                    android:textAlignment="textEnd"/>
             </LinearLayout>
 
             <TextView
@@ -60,6 +61,7 @@
                 android:textSize="22sp"
                 android:textColor="#AAAAAA"
                 android:gravity="center"
+                android:layout_marginStart="12dp"
                 android:background="@drawable/card_bg"/>
         </LinearLayout>
 
@@ -89,23 +91,25 @@
 
                 <TextView
                     android:id="@+id/tv_status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="מאתחל..."
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:fontFamily="sans-serif-medium"
-                    android:textDirection="rtl"/>
+                    android:gravity="end"
+                    android:textAlignment="textEnd"/>
 
                 <TextView
                     android:id="@+id/tv_last_event"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="אחרון: אין"
                     android:textColor="#AAAAAA"
                     android:textSize="12sp"
                     android:layout_marginTop="2dp"
-                    android:textDirection="rtl"/>
+                    android:gravity="end"
+                    android:textAlignment="textEnd"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -133,7 +137,7 @@
             android:gravity="end"
             android:textAlignment="textEnd"/>
 
-        <!-- GATE BUTTONS -->
+        <!-- GATE BUTTONS - both dark -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -145,7 +149,7 @@
                 android:layout_height="100dp"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:background="@drawable/gate_btn_north"
+                android:background="@drawable/gate_btn_dark"
                 android:orientation="vertical"
                 android:gravity="center"
                 android:clickable="true"
@@ -158,10 +162,11 @@
                     android:textSize="28sp"/>
 
                 <TextView
+                    android:id="@+id/tv_gate1_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="שער צפון"
-                    android:textColor="#000000"
+                    android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:fontFamily="sans-serif-medium"
                     android:layout_marginTop="6dp"/>
@@ -173,7 +178,7 @@
                 android:layout_height="100dp"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:background="@drawable/gate_btn_south"
+                android:background="@drawable/gate_btn_dark"
                 android:orientation="vertical"
                 android:gravity="center"
                 android:clickable="true"
@@ -186,6 +191,7 @@
                     android:textSize="28sp"/>
 
                 <TextView
+                    android:id="@+id/tv_gate2_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="שער דרום"
