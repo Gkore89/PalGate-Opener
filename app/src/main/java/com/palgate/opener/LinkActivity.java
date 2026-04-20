@@ -197,14 +197,14 @@ public class LinkActivity extends AppCompatActivity {
         int tokenType = 1;
         try { tokenType = Integer.parseInt(typeStr); } catch (Exception ignored) {}
 
-        // Verify token before saving
         final String finalPhone = phone;
         final int finalType = tokenType;
-        tvManualStatus.setText("מאמת טוקן...");
+        final String finalToken = token;
+
+        tvManualStatus.setText("מאמת...");
         tvManualStatus.setTextColor(0xFFAAAAAA);
         btnManualSave.setEnabled(false);
 
-        final String finalToken = token;
         new Thread(() -> {
             try {
                 String derived = PalGateTokenGenerator.generateDerivedToken(finalPhone, finalToken, finalType);
@@ -219,18 +219,40 @@ public class LinkActivity extends AppCompatActivity {
                 conn.setConnectTimeout(10000);
                 conn.setReadTimeout(10000);
                 int code = conn.getResponseCode();
+                String body = "";
+                try {
+                    InputStream is = code >= 200 && code < 300
+                        ? conn.getInputStream() : conn.getErrorStream();
+                    if (is != null) {
+                        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                        StringBuilder sb = new StringBuilder();
+                        String line;
+                        while ((line = br.readLine()) != null) sb.append(line);
+                        body = sb.toString();
+                    }
+                } catch (Exception ignored) {}
                 conn.disconnect();
 
+                // Debug info
+                final String debug =
+                    "Phone: " + finalPhone + "\n" +
+                    "Token len: " + finalToken.length() + "\n" +
+                    "Type: " + finalType + "\n" +
+                    "Derived: " + derived.substring(0, 8) + "...\n" +
+                    "HTTP: " + code + "\n" +
+                    "Body: " + body;
+
+                final int respCode = code;
                 mainHandler.post(() -> {
                     btnManualSave.setEnabled(true);
-                    if (code >= 200 && code < 300) {
+                    if (respCode >= 200 && respCode < 300) {
                         prefs.saveCredentials(finalPhone, finalToken, finalType);
-                        tvManualStatus.setText("✓ טוקן תקין! שמור בהצלחה");
+                        tvManualStatus.setText("✓ טוקן תקין! שמור.\n" + debug);
                         tvManualStatus.setTextColor(0xFF00C896);
                         setResult(RESULT_OK);
-                        new Handler().postDelayed(this::finish, 1500);
+                        new Handler().postDelayed(this::finish, 3000);
                     } else {
-                        tvManualStatus.setText("✗ טוקן לא תקין (HTTP " + code + ")\nבדוק מספר טלפון, טוקן וסוג טוקן");
+                        tvManualStatus.setText("✗ נכשל\n" + debug);
                         tvManualStatus.setTextColor(0xFFFF6B6B);
                     }
                 });
