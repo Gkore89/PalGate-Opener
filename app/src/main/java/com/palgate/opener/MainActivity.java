@@ -122,13 +122,28 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "יש לקשר תחילה את חשבון PalGate", Toast.LENGTH_SHORT).show();
             return;
         }
-        try {
-            Intent i = new Intent(this, GateMonitorService.class);
-            i.setAction(GateMonitorService.ACTION_OPEN);
-            i.putExtra(GateMonitorService.EXTRA_GATE_ID, gateId);
-            startService(i);
-            tvStatus.setText("פותח " + gateName + "...");
-        } catch (Exception e) { showError("שגיאה: " + e.getMessage()); }
+        tvStatus.setText("פותח " + gateName + "...");
+        // Call directly (not via service) so we see the full error
+        PalGateApiClient.openGate(
+            gateId,
+            prefs.getPhone(),
+            prefs.getToken(),
+            prefs.getTokenType(),
+            new PalGateApiClient.OpenCallback() {
+                @Override public void onSuccess(String id) {
+                    runOnUiThread(() -> {
+                        tvStatus.setText("✓ " + gateName + " נפתח!");
+                        tvLastEvent.setText("אחרון: " + gateName);
+                    });
+                }
+                @Override public void onFailure(String id, String error) {
+                    runOnUiThread(() -> {
+                        tvStatus.setText("✗ " + error);
+                        showError(error);
+                    });
+                }
+            }
+        );
     }
 
     private void showBtPicker() {
