@@ -38,16 +38,15 @@ public class PalGateApiClient {
                     os.write("{}".getBytes());
                 }
                 int code = conn.getResponseCode();
+                String errBody = "";
+                    if (code < 200 || code >= 300) {
+                InputStream errStream = conn.getErrorStream();
+                    if (errStream != null) errBody = readStream(errStream);
+                }
                 conn.disconnect();
-                if (code >= 200 && code < 300) cb.onSuccess(gateId);
-                else   (InputStream errStream = conn.getErrorStream();
-                        String errBody = errStream != null ? readStream(errStream) : "";
-                        cb.onFailure(gateId, "HTTP " + responseCode + ": " + errBody);)
-            } catch (Exception e) {
-                Log.e(TAG, "openGate error", e);
-                cb.onFailure(gateId, e.getMessage());
-            }
-        }).start();
+                    if (code >= 200 && code < 300) cb.onSuccess(gateId);
+                    else cb.onFailure(gateId, "HTTP " + code + ": " + errBody);
+                }).start();
     }
 
     // ── PalGate device linking via QR ────────────────────────────
