@@ -12,6 +12,9 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import java.util.UUID;
 
 public class LinkActivity extends AppCompatActivity {
@@ -211,27 +214,19 @@ public class LinkActivity extends AppCompatActivity {
                 long ts = System.currentTimeMillis() / 1000L;
                 String checkUrl = BASE_URL + "user/check-token?ts=" + ts + "&ts_diff=0";
 
-                URL url = new URL(checkUrl);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("User-Agent", USER_AGENT);
-                conn.setRequestProperty("x-bt-token", derived);
-                conn.setConnectTimeout(10000);
-                conn.setReadTimeout(10000);
-                int code = conn.getResponseCode();
+                okhttp3.OkHttpClient okClient = new okhttp3.OkHttpClient();
+                okhttp3.Request req = new okhttp3.Request.Builder()
+                        .url(checkUrl)
+                        .get()
+                        .header("User-Agent", USER_AGENT)
+                        .header("x-bt-token", derived)
+                        .build();
+                int code;
                 String body = "";
-                try {
-                    InputStream is = code >= 200 && code < 300
-                        ? conn.getInputStream() : conn.getErrorStream();
-                    if (is != null) {
-                        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                        StringBuilder sb = new StringBuilder();
-                        String line;
-                        while ((line = br.readLine()) != null) sb.append(line);
-                        body = sb.toString();
-                    }
-                } catch (Exception ignored) {}
-                conn.disconnect();
+                try (okhttp3.Response resp = okClient.newCall(req).execute()) {
+                    code = resp.code();
+                    if (resp.body() != null) body = resp.body().string();
+                }
 
                 // Debug info
                 final String debug =

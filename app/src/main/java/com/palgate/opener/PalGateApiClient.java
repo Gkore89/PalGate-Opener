@@ -1,15 +1,16 @@
 package com.palgate.opener;
 
 import android.util.Log;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import okhttp3.*;
+import java.io.IOException;
 
 public class PalGateApiClient {
 
     private static final String TAG = "PalGateApi";
     private static final String BASE = "https://api1.pal-es.com/v1/bt/";
-    private static final String USER_AGENT = "okhttp/4.9.3";
+
+    private static final OkHttpClient client = new OkHttpClient.Builder()
+            .build();
 
     public interface OpenCallback {
         void onSuccess(String gateId);
@@ -19,55 +20,60 @@ public class PalGateApiClient {
     public static void openGate(String gateId, String phone, String token,
                                 int tokenType, OpenCallback cb) {
         new Thread(() -> {
-            try {
-                String derived = PalGateTokenGenerator.generateDerivedToken(
-                        phone, token, tokenType);
-
-                Log.d(TAG, "Opening gate=" + gateId + " tokenType=" + tokenType);
-
-                // Correct endpoint: GET /device/{id}/open-gate?outputNum=1
-                // Header: x-bt-token (lowercase)
-                String urlStr = BASE + "device/" + gateId + "/open-gate?outputNum=1";
-                URL url = new URL(urlStr);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("User-Agent", USER_AGENT);
-                conn.setRequestProperty("x-bt-token", derived);
-                conn.setRequestProperty("Accept", "*/*");
-                conn.setRequestProperty("Accept-Language", "en-us");
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setConnectTimeout(15000);
-                conn.setReadTimeout(15000);
-
-                int code = conn.getResponseCode();
-                String body = "";
+            int[] offsets = {0, 30, -30, 60, -60};
+            String lastError = "unknown";
+            for (int offset : offsets) {
                 try {
-                    InputStream is = code >= 200 && code < 300
-                            ? conn.getInputStream() : conn.getErrorStream();
-                    if (is != null) body = readStream(is);
-                } catch (Exception ignored) {}
-                conn.disconnect();
+                    String derived = PalGateTokenGenerator.generateDerivedToken(
+                            phone, token, tokenType, offset);
 
-                Log.d(TAG, "open-gate response: " + code + " body=" + body);
+                    String url = BASE + "device/" + gateId + "/open-gate?outputNum=1";
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .get()
+                            .header("User-Agent", "okhttp/4.9.3")
+                            .header("x-bt-token", derived)
+                            .header("Accept", "*/*")
+                            .header("Accept-Language", "en-us")
+                            .build();
 
-                if (code >= 200 && code < 300) {
-                    cb.onSuccess(gateId);
-                } else {
-                    cb.onFailure(gateId, "HTTP " + code + ": " + body);
+                    try (Response response = client.newCall(request).execute()) {
+                        int code = response.code();
+                        String body = response.body() != null ? response.body().string() : "";
+                        Log.d(TAG, "open-gate offset=" + offset + " code=" + code + " body=" + body);
+
+                        if (code >= 200 && code < 300) {
+                            cb.onSuccess(gateId);
+                            return;
+                        }
+                        lastError = "HTTP " + code + ": " + body;
+                        if (code != 401) break;
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "openGate error", e);
+                    lastError = e.getMessage();
                 }
-            } catch (Exception e) {
-                Log.e(TAG, "openGate error", e);
-                cb.onFailure(gateId, e.getMessage());
             }
+            cb.onFailure(gateId, lastError);
         }).start();
     }
 
-    static String readStream(InputStream is) throws IOException {
-        if (is == null) return "";
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = br.readLine()) != null) sb.append(line);
-        return sb.toString();
+    // Check token using OkHttp
+    public static int checkToken(String derived) {
+        try {
+            long ts = System.currentTimeMillis() / 1000L;
+            String url = BASE + "user/check-token?ts=" + ts + "&ts_diff=0";
+            Request request = new Request.Builder()
+                    .url(url)
+                    .get()
+                    .header("User-Agent", "okhttp/4.9.3")
+                    .header("x-bt-token", derived)
+                    .build();
+            try (Response response = client.newCall(request).execute()) {
+                return response.code();
+            }
+        } catch (Exception e) {
+            return -1;
+        }
     }
 }

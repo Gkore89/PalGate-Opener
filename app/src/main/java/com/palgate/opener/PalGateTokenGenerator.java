@@ -6,23 +6,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-/**
- * PalGate derived-token generator.
- * Exact port of DonutByte/pylgate token_generator.py
- *
- * T_C_KEY = [250, 211, 37, 114, 129, 41, 0, 0, 0, 0, 0, 0, 58, 180, 90, 101]
- * TIMESTAMP_OFFSET = 2
- * TOKEN_SIZE = 23
- * BLOCK_SIZE = 16
- *
- * step1: inject phone into T_C_KEY[6:12], AES-ECB ENCRYPT session_token with that key
- * step2: build 16-byte state (0x0A0A at [1:3], timestamp+2 at [10:14] big-endian),
- *        AES-ECB DECRYPT state using step1 result as key
- * result[0]    = 0x01 (SMS) / 0x11 (PRIMARY) / 0x21 (SECONDARY)
- * result[1:7]  = phone number upper 6 bytes (big-endian int64 bytes [2:8])
- * result[7:23] = step2 result
- * return result.hex().toUpperCase()
- */
 public class PalGateTokenGenerator {
 
     private static final String TAG = "PalGateToken";
@@ -40,53 +23,47 @@ public class PalGateTokenGenerator {
 
     public static String generateDerivedToken(String phoneStr, String sessionTokenHex, int tokenTypeInt)
             throws Exception {
+        return generateDerivedToken(phoneStr, sessionTokenHex, tokenTypeInt, 0);
+    }
+
+    public static String generateDerivedToken(String phoneStr, String sessionTokenHex,
+                                               int tokenTypeInt, int clockOffsetSeconds)
+            throws Exception {
 
         long phoneNumber = Long.parseLong(phoneStr.trim());
         byte[] sessionToken = hexToBytes(sessionTokenHex);
-        int timestamp = (int)(System.currentTimeMillis() / 1000L);
+        int timestamp = (int)(System.currentTimeMillis() / 1000L) + clockOffsetSeconds;
 
-        // step 1: build key from T_C_KEY with phone injected at [6:12]
+        // Step 1
         byte[] key = Arrays.copyOf(T_C_KEY, BLOCK_SIZE);
-        // struct.pack(">Q", phone_number)[2:8] → bytes 2..7 of big-endian int64
         byte[] phoneBytes = new byte[8];
         ByteBuffer.wrap(phoneBytes).putLong(phoneNumber);
-        // key[6:12] = phoneBytes[2:8]
         System.arraycopy(phoneBytes, 2, key, 6, 6);
-
-        // AES-ECB ENCRYPT session_token with key
         byte[] step1Result = aesEcb(sessionToken, key, true);
 
-        // step 2: build 16-byte state
+        // Step 2
         byte[] state = new byte[BLOCK_SIZE];
-        // next_state[1:3] = struct.pack("<H", 0x0A0A) → little-endian 0x0A0A = [0x0A, 0x0A]
         state[1] = 0x0A;
         state[2] = 0x0A;
-        // next_state[10:14] = struct.pack(">I", timestamp + offset)
         int ts = timestamp + TIMESTAMP_OFFSET;
         state[10] = (byte)((ts >> 24) & 0xFF);
         state[11] = (byte)((ts >> 16) & 0xFF);
         state[12] = (byte)((ts >>  8) & 0xFF);
         state[13] = (byte)( ts        & 0xFF);
-
-        // AES-ECB DECRYPT state using step1 result as key
         byte[] step2Result = aesEcb(state, step1Result, false);
 
-        // Assemble 23-byte result
+        // Assemble
         byte[] result = new byte[TOKEN_SIZE];
-        // byte 0: token type marker
-        if (tokenTypeInt == 0)      result[0] = 0x01; // SMS
-        else if (tokenTypeInt == 1) result[0] = 0x11; // PRIMARY
-        else                        result[0] = 0x21; // SECONDARY
-
-        // bytes 1-6: phoneBytes[2:8] (upper 6 bytes of big-endian int64)
+        if (tokenTypeInt == 0)      result[0] = 0x01;
+        else if (tokenTypeInt == 1) result[0] = 0x11;
+        else                        result[0] = 0x21;
         System.arraycopy(phoneBytes, 2, result, 1, 6);
-
-        // bytes 7-22: step2 result
         System.arraycopy(step2Result, 0, result, 7, BLOCK_SIZE);
 
         String derived = bytesToHex(result).toUpperCase();
         Log.d(TAG, "Token: phone=" + phoneNumber + " type=" + tokenTypeInt
-                + " ts=" + timestamp + " derived=" + derived.substring(0, 6) + "...");
+                + " ts=" + timestamp + " offset=" + clockOffsetSeconds
+                + " derived_prefix=" + derived.substring(0, 8));
         return derived;
     }
 
