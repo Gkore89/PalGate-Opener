@@ -1,253 +1,272 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#0D0D0D"
     android:layoutDirection="rtl">
 
+    <!-- Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="חיבור חשבון PalGate"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:padding="16dp"/>
+
+    <!-- Tab buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="חיבור חשבון PalGate"
+        <Button
+            android:id="@+id/btn_tab_qr"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:text="QR קוד"
             android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            android:fontFamily="sans-serif-medium"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="20dp"/>
-
-        <!-- QR Code -->
-        <ImageView
-            android:id="@+id/iv_qr"
-            android:layout_width="240dp"
-            android:layout_height="240dp"
-            android:layout_gravity="center"
-            android:background="#FFFFFF"
-            android:padding="8dp"
-            android:layout_marginBottom="12dp"
-            android:scaleType="fitCenter"/>
-
-        <!-- Status -->
-        <TextView
-            android:id="@+id/tv_link_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="#AAAAAA"
-            android:textSize="13sp"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:layout_marginBottom="12dp"/>
-
-        <!-- Share button -->
-        <Button
-            android:id="@+id/btn_share"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:text="שלח QR למחשב / טאבלט"
-            android:textColor="#000000"
-            android:backgroundTint="#00C896"
-            android:textAllCaps="false"
-            android:textSize="15sp"
-            android:visibility="gone"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Waiting instructions - RTL fixed -->
-        <LinearLayout
-            android:id="@+id/layout_waiting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/card_bg"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="שלבי החיבור:"
-                android:textColor="#00C896"
-                android:textSize="13sp"
-                android:fontFamily="sans-serif-medium"
-                android:textAlignment="textEnd"
-                android:gravity="end"
-                android:layout_marginBottom="12dp"/>
-
-            <!-- Step 1 -->
-            <LinearLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="10dp">
-                <TextView android:layout_width="28dp" android:layout_height="28dp"
-                    android:text="1" android:textColor="#0D0D0D" android:textSize="14sp"
-                    android:fontFamily="sans-serif-bold" android:gravity="center"
-                    android:background="@drawable/dot_green" android:layout_marginEnd="10dp"/>
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="לחץ שלח QR ושלח את התמונה לעצמך (וואטסאפ / מייל)"
-                    android:textColor="#CCCCCC" android:textSize="13sp"
-                    android:textAlignment="textEnd" android:gravity="end"/>
-            </LinearLayout>
-
-            <!-- Step 2 -->
-            <LinearLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="10dp">
-                <TextView android:layout_width="28dp" android:layout_height="28dp"
-                    android:text="2" android:textColor="#0D0D0D" android:textSize="14sp"
-                    android:fontFamily="sans-serif-bold" android:gravity="center"
-                    android:background="@drawable/dot_green" android:layout_marginEnd="10dp"/>
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="פתח את התמונה במחשב, טאבלט, או טלוויזיה חכמה"
-                    android:textColor="#CCCCCC" android:textSize="13sp"
-                    android:textAlignment="textEnd" android:gravity="end"/>
-            </LinearLayout>
-
-            <!-- Step 3 -->
-            <LinearLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="10dp">
-                <TextView android:layout_width="28dp" android:layout_height="28dp"
-                    android:text="3" android:textColor="#0D0D0D" android:textSize="14sp"
-                    android:fontFamily="sans-serif-bold" android:gravity="center"
-                    android:background="@drawable/dot_green" android:layout_marginEnd="10dp"/>
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="פתח את אפליקציית PalGate על הטלפון הזה"
-                    android:textColor="#CCCCCC" android:textSize="13sp"
-                    android:textAlignment="textEnd" android:gravity="end"/>
-            </LinearLayout>
-
-            <!-- Step 4 -->
-            <LinearLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="10dp">
-                <TextView android:layout_width="28dp" android:layout_height="28dp"
-                    android:text="4" android:textColor="#0D0D0D" android:textSize="14sp"
-                    android:fontFamily="sans-serif-bold" android:gravity="center"
-                    android:background="@drawable/dot_green" android:layout_marginEnd="10dp"/>
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="☰ ← מכשירים מקושרים ← קשר מכשיר"
-                    android:textColor="#CCCCCC" android:textSize="13sp"
-                    android:textAlignment="textEnd" android:gravity="end"/>
-            </LinearLayout>
-
-            <!-- Step 5 -->
-            <LinearLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
-                <TextView android:layout_width="28dp" android:layout_height="28dp"
-                    android:text="5" android:textColor="#0D0D0D" android:textSize="14sp"
-                    android:fontFamily="sans-serif-bold" android:gravity="center"
-                    android:background="@drawable/dot_green" android:layout_marginEnd="10dp"/>
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="סרוק את קוד ה-QR שמוצג על המסך האחר"
-                    android:textColor="#00C896" android:textSize="13sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:textAlignment="textEnd" android:gravity="end"/>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="החיבור יאושר אוטומטית לאחר הסריקה ✓"
-                android:textColor="#666666"
-                android:textSize="12sp"
-                android:textAlignment="center"
-                android:gravity="center"/>
-
-        </LinearLayout>
-
-        <!-- Success -->
-        <LinearLayout
-            android:id="@+id/layout_success"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/card_bg"
-            android:padding="20dp"
-            android:gravity="center"
-            android:layout_marginBottom="16dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✓"
-                android:textColor="#00C896"
-                android:textSize="48sp"
-                android:layout_marginBottom="8dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="החיבור הצליח!"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:fontFamily="sans-serif-medium"
-                android:textAlignment="center"
-                android:gravity="center"
-                android:layout_marginBottom="4dp"/>
-
-            <TextView
-                android:id="@+id/tv_success_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#00C896"
-                android:textSize="14sp"
-                android:textAlignment="center"
-                android:gravity="center"/>
-
-            <Button
-                android:id="@+id/btn_done"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                android:text="סגור"
-                android:textColor="#000000"
-                android:backgroundTint="#00C896"
-                android:textAllCaps="false"/>
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_retry"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="נסה שוב"
-            android:textColor="#000000"
-            android:backgroundTint="#00C896"
-            android:textAllCaps="false"
-            android:visibility="gone"
-            android:layout_marginBottom="8dp"/>
-
-        <Button
-            android:id="@+id/btn_back"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="חזור"
-            android:textColor="#CCCCCC"
-            android:backgroundTint="#2A2A2A"
+            android:backgroundTint="#1E1E1E"
             android:textAllCaps="false"/>
 
+        <Button
+            android:id="@+id/btn_tab_manual"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:text="הכנסה ידנית"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#1E1E1E"
+            android:textAllCaps="false"/>
     </LinearLayout>
-</ScrollView>
+
+    <!-- ── QR TAB ── -->
+    <ScrollView
+        android:id="@+id/layout_qr_tab"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/iv_qr"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:layout_gravity="center"
+                android:background="#FFFFFF"
+                android:padding="8dp"
+                android:layout_marginBottom="12dp"
+                android:scaleType="fitCenter"/>
+
+            <TextView
+                android:id="@+id/tv_link_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#AAAAAA"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:layout_marginBottom="12dp"/>
+
+            <Button
+                android:id="@+id/btn_share"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="שלח QR למחשב / טאבלט"
+                android:textColor="#000000"
+                android:backgroundTint="#00C896"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Waiting steps -->
+            <LinearLayout
+                android:id="@+id/layout_waiting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="14dp"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="שלבי החיבור:"
+                    android:textColor="#00C896"
+                    android:textSize="12sp"
+                    android:gravity="end"
+                    android:layout_marginBottom="10dp"/>
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="1.  שלח QR למחשב/טאבלט (לחץ כפתור למעלה)"
+                    android:textColor="#CCCCCC" android:textSize="12sp"
+                    android:gravity="end" android:layout_marginBottom="6dp"/>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="2.  פתח התמונה על המסך האחר"
+                    android:textColor="#CCCCCC" android:textSize="12sp"
+                    android:gravity="end" android:layout_marginBottom="6dp"/>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="3.  פתח PalGate על הטלפון הזה"
+                    android:textColor="#CCCCCC" android:textSize="12sp"
+                    android:gravity="end" android:layout_marginBottom="6dp"/>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="4.  ☰ ← מכשירים מקושרים ← קשר מכשיר"
+                    android:textColor="#CCCCCC" android:textSize="12sp"
+                    android:gravity="end" android:layout_marginBottom="6dp"/>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="5.  סרוק QR מהמסך האחר — החיבור יאושר אוטומטית ✓"
+                    android:textColor="#00C896" android:textSize="12sp"
+                    android:gravity="end"/>
+            </LinearLayout>
+
+            <!-- Success -->
+            <LinearLayout
+                android:id="@+id/layout_success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="20dp"
+                android:gravity="center"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="✓" android:textColor="#00C896" android:textSize="40sp"
+                    android:layout_marginBottom="8dp"/>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="החיבור הצליח!" android:textColor="#FFFFFF" android:textSize="17sp"
+                    android:gravity="center" android:layout_marginBottom="4dp"/>
+                <TextView android:id="@+id/tv_success_phone"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="#00C896" android:textSize="13sp" android:gravity="center"/>
+                <Button android:id="@+id/btn_done"
+                    android:layout_width="match_parent" android:layout_height="44dp"
+                    android:layout_marginTop="12dp" android:text="סגור"
+                    android:textColor="#000000" android:backgroundTint="#00C896"
+                    android:textAllCaps="false"/>
+            </LinearLayout>
+
+            <Button android:id="@+id/btn_retry"
+                android:layout_width="match_parent" android:layout_height="44dp"
+                android:text="נסה שוב" android:textColor="#000000"
+                android:backgroundTint="#00C896" android:textAllCaps="false"
+                android:visibility="gone" android:layout_marginBottom="8dp"/>
+
+            <Button android:id="@+id/btn_back"
+                android:layout_width="match_parent" android:layout_height="44dp"
+                android:text="חזור" android:textColor="#CCCCCC"
+                android:backgroundTint="#2A2A2A" android:textAllCaps="false"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ── MANUAL TAB ── -->
+    <ScrollView
+        android:id="@+id/layout_manual_tab"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Instructions card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_bg"
+                android:padding="14dp"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="כיצד לקבל את הטוקן?"
+                    android:textColor="#00C896"
+                    android:textSize="12sp"
+                    android:gravity="end"
+                    android:layout_marginBottom="8dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1.  הרץ על המחשב:\npip install git+https://github.com/DonutByte/pylgate.git@main\npip install qrcode requests\npython generate_linked_device_session_token.py"
+                    android:textColor="#CCCCCC"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace"
+                    android:gravity="end"
+                    android:layout_marginBottom="6dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2.  סרוק QR עם PalGate ← מכשירים מקושרים ← קשר מכשיר"
+                    android:textColor="#CCCCCC"
+                    android:textSize="11sp"
+                    android:gravity="end"
+                    android:layout_marginBottom="6dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="3.  העתק Phone number, Session token, Token type לשדות למטה"
+                    android:textColor="#CCCCCC"
+                    android:textSize="11sp"
+                    android:gravity="end"/>
+            </LinearLayout>
+
+            <TextView style="@style/FieldLabel" android:text="מספר טלפון (972... או 05...):"/>
+            <EditText android:id="@+id/et_manual_phone" style="@style/FieldInput"
+                android:hint="972524886478" android:inputType="phone"/>
+
+            <TextView style="@style/FieldLabel" android:text="Session Token (32 תווים hex):"/>
+            <EditText android:id="@+id/et_manual_token" style="@style/FieldInput"
+                android:hint="a1b2c3d4e5f6..." android:inputType="text"
+                android:fontFamily="monospace"/>
+
+            <TextView style="@style/FieldLabel" android:text="סוג טוקן (0=SMS, 1=PRIMARY, 2=SECONDARY):"/>
+            <EditText android:id="@+id/et_manual_token_type" style="@style/FieldInput"
+                android:hint="1" android:inputType="number"/>
+
+            <TextView
+                android:id="@+id/tv_manual_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="13sp"
+                android:gravity="center"
+                android:layout_marginBottom="12dp"/>
+
+            <Button
+                android:id="@+id/btn_manual_save"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="אמת ושמור"
+                android:textColor="#000000"
+                android:backgroundTint="#00C896"
+                android:textAllCaps="false"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

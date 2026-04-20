@@ -19,14 +19,26 @@ public class LinkActivity extends AppCompatActivity {
     private static final String BASE_URL = "https://api1.pal-es.com/v1/bt/";
     private static final String USER_AGENT = "okhttp/4.9.3";
 
+    // Tab buttons
+    private Button btnTabQr, btnTabManual;
+    private View layoutQr, layoutManual;
+
+    // QR tab
     private ImageView ivQr;
     private TextView tvStatus;
-    private Button btnShare, btnRetry, btnBack, btnDone;
+    private Button btnShare, btnRetry, btnBack;
     private View layoutWaiting, layoutSuccess;
-    private AppPrefs prefs;
-    private Handler mainHandler;
+    private TextView tvSuccessPhone;
     private Bitmap currentQrBitmap;
     private boolean linking = false;
+
+    // Manual tab
+    private EditText etManualPhone, etManualToken, etManualTokenType;
+    private Button btnManualSave;
+    private TextView tvManualStatus;
+
+    private AppPrefs prefs;
+    private Handler mainHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,20 +47,44 @@ public class LinkActivity extends AppCompatActivity {
         prefs = new AppPrefs(this);
         mainHandler = new Handler(Looper.getMainLooper());
 
-        ivQr         = findViewById(R.id.iv_qr);
-        tvStatus     = findViewById(R.id.tv_link_status);
-        btnShare     = findViewById(R.id.btn_share);
-        btnRetry     = findViewById(R.id.btn_retry);
-        btnBack      = findViewById(R.id.btn_back);
-        btnDone      = findViewById(R.id.btn_done);
-        layoutWaiting= findViewById(R.id.layout_waiting);
-        layoutSuccess= findViewById(R.id.layout_success);
+        btnTabQr     = findViewById(R.id.btn_tab_qr);
+        btnTabManual = findViewById(R.id.btn_tab_manual);
+        layoutQr     = findViewById(R.id.layout_qr_tab);
+        layoutManual = findViewById(R.id.layout_manual_tab);
 
+        ivQr          = findViewById(R.id.iv_qr);
+        tvStatus      = findViewById(R.id.tv_link_status);
+        btnShare      = findViewById(R.id.btn_share);
+        btnRetry      = findViewById(R.id.btn_retry);
+        btnBack       = findViewById(R.id.btn_back);
+        layoutWaiting = findViewById(R.id.layout_waiting);
+        layoutSuccess = findViewById(R.id.layout_success);
+        tvSuccessPhone= findViewById(R.id.tv_success_phone);
+
+        etManualPhone    = findViewById(R.id.et_manual_phone);
+        etManualToken    = findViewById(R.id.et_manual_token);
+        etManualTokenType= findViewById(R.id.et_manual_token_type);
+        btnManualSave    = findViewById(R.id.btn_manual_save);
+        tvManualStatus   = findViewById(R.id.tv_manual_status);
+
+        btnTabQr.setOnClickListener(v -> showTab(true));
+        btnTabManual.setOnClickListener(v -> showTab(false));
         btnShare.setOnClickListener(v -> shareQr());
         btnRetry.setOnClickListener(v -> startLinking());
         btnBack.setOnClickListener(v -> finish());
-        btnDone.setOnClickListener(v -> finish());
+        findViewById(R.id.btn_done).setOnClickListener(v -> finish());
+        btnManualSave.setOnClickListener(v -> saveManual());
 
+        // Pre-fill manual fields if already linked
+        if (prefs.isLinked()) {
+            String phone = prefs.getPhone();
+            if (phone.startsWith("972")) phone = "0" + phone.substring(3);
+            etManualPhone.setText(phone);
+            etManualToken.setText(prefs.getToken());
+            etManualTokenType.setText(String.valueOf(prefs.getTokenType()));
+        }
+
+        showTab(true);
         startLinking();
     }
 
@@ -56,6 +92,17 @@ public class LinkActivity extends AppCompatActivity {
         super.onDestroy();
         linking = false;
     }
+
+    private void showTab(boolean qr) {
+        layoutQr.setVisibility(qr ? View.VISIBLE : View.GONE);
+        layoutManual.setVisibility(qr ? View.GONE : View.VISIBLE);
+        btnTabQr.setAlpha(qr ? 1f : 0.5f);
+        btnTabManual.setAlpha(qr ? 0.5f : 1f);
+        if (!qr) linking = false;
+        else if (!linking) startLinking();
+    }
+
+    // ── QR linking ────────────────────────────────────────────────
 
     private void startLinking() {
         linking = true;
@@ -70,7 +117,6 @@ public class LinkActivity extends AppCompatActivity {
             try {
                 String uniqueId = UUID.randomUUID().toString();
                 String qrContent = "{\"id\": \"" + uniqueId + "\"}";
-
                 Bitmap qrBitmap = generateQrBitmap(qrContent, 800);
                 currentQrBitmap = qrBitmap;
 
@@ -81,13 +127,9 @@ public class LinkActivity extends AppCompatActivity {
                     setStatus("ממתין לסריקה...", 0xFFAAAAAA);
                 });
 
-                // Block until PalGate scans the QR (up to 3 minutes)
-                String initUrl = BASE_URL + "un/secondary/init/" + uniqueId;
-                JSONObject initResp = getJson(initUrl);
-
+                JSONObject initResp = getJson(BASE_URL + "un/secondary/init/" + uniqueId);
                 if (!linking) return;
 
-                // Check for success — err:null means OK
                 boolean hasError = true;
                 if (initResp != null) {
                     Object errVal = initResp.opt("err");
@@ -96,11 +138,7 @@ public class LinkActivity extends AppCompatActivity {
                             || (errVal instanceof String)
                             || (!status.equals("ok") && !status.equals("success"));
                 }
-
-                if (hasError) {
-                    throw new Exception("שגיאה מהשרת: " +
-                            (initResp != null ? initResp.toString() : "אין תגובה"));
-                }
+                if (hasError) throw new Exception("שגיאה: " + (initResp != null ? initResp : "null"));
 
                 JSONObject user = initResp.getJSONObject("user");
                 String phone    = user.getString("id");
@@ -109,15 +147,11 @@ public class LinkActivity extends AppCompatActivity {
 
                 mainHandler.post(() -> setStatus("מאמת חיבור...", 0xFFAAAAAA));
 
-                // Verify
-                String derived = PalGateTokenGenerator.generateDerivedToken(
-                        phone, tokenHex, tokenType);
+                String derived = PalGateTokenGenerator.generateDerivedToken(phone, tokenHex, tokenType);
                 getJsonAuth(BASE_URL + "secondary/status", derived);
 
                 prefs.saveCredentials(phone, tokenHex, tokenType);
-
-                String displayPhone = phone.startsWith("972")
-                        ? "0" + phone.substring(3) : phone;
+                String display = phone.startsWith("972") ? "0" + phone.substring(3) : phone;
 
                 mainHandler.post(() -> {
                     linking = false;
@@ -126,8 +160,7 @@ public class LinkActivity extends AppCompatActivity {
                     btnShare.setVisibility(View.GONE);
                     btnRetry.setVisibility(View.GONE);
                     ivQr.setImageBitmap(null);
-                    ((TextView) findViewById(R.id.tv_success_phone))
-                            .setText("מחובר: " + displayPhone);
+                    tvSuccessPhone.setText("מחובר: " + display + "\nסוג טוקן: " + tokenType);
                     setStatus("", 0xFFAAAAAA);
                     setResult(RESULT_OK);
                     new Handler().postDelayed(this::finish, 2000);
@@ -144,17 +177,83 @@ public class LinkActivity extends AppCompatActivity {
         }).start();
     }
 
+    // ── Manual entry ──────────────────────────────────────────────
+
+    private void saveManual() {
+        String phone = etManualPhone.getText().toString().trim();
+        String token = etManualToken.getText().toString().trim();
+        String typeStr = etManualTokenType.getText().toString().trim();
+
+        if (phone.isEmpty() || token.isEmpty()) {
+            tvManualStatus.setText("יש למלא טלפון וטוקן");
+            tvManualStatus.setTextColor(0xFFFF6B6B);
+            return;
+        }
+
+        // Normalize phone
+        if (phone.startsWith("0")) phone = "972" + phone.substring(1);
+        else if (!phone.startsWith("972")) phone = "972" + phone;
+
+        int tokenType = 1;
+        try { tokenType = Integer.parseInt(typeStr); } catch (Exception ignored) {}
+
+        // Verify token before saving
+        final String finalPhone = phone;
+        final int finalType = tokenType;
+        tvManualStatus.setText("מאמת טוקן...");
+        tvManualStatus.setTextColor(0xFFAAAAAA);
+        btnManualSave.setEnabled(false);
+
+        final String finalToken = token;
+        new Thread(() -> {
+            try {
+                String derived = PalGateTokenGenerator.generateDerivedToken(finalPhone, finalToken, finalType);
+                long ts = System.currentTimeMillis() / 1000L;
+                String checkUrl = BASE_URL + "user/check-token?ts=" + ts + "&ts_diff=0";
+
+                URL url = new URL(checkUrl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("User-Agent", USER_AGENT);
+                conn.setRequestProperty("X-Bt-Token", derived);
+                conn.setConnectTimeout(10000);
+                conn.setReadTimeout(10000);
+                int code = conn.getResponseCode();
+                conn.disconnect();
+
+                mainHandler.post(() -> {
+                    btnManualSave.setEnabled(true);
+                    if (code >= 200 && code < 300) {
+                        prefs.saveCredentials(finalPhone, finalToken, finalType);
+                        tvManualStatus.setText("✓ טוקן תקין! שמור בהצלחה");
+                        tvManualStatus.setTextColor(0xFF00C896);
+                        setResult(RESULT_OK);
+                        new Handler().postDelayed(this::finish, 1500);
+                    } else {
+                        tvManualStatus.setText("✗ טוקן לא תקין (HTTP " + code + ")\nבדוק מספר טלפון, טוקן וסוג טוקן");
+                        tvManualStatus.setTextColor(0xFFFF6B6B);
+                    }
+                });
+            } catch (Exception e) {
+                mainHandler.post(() -> {
+                    btnManualSave.setEnabled(true);
+                    tvManualStatus.setText("שגיאה: " + e.getMessage());
+                    tvManualStatus.setTextColor(0xFFFF6B6B);
+                });
+            }
+        }).start();
+    }
+
     private void shareQr() {
         if (currentQrBitmap == null) return;
         try {
             String path = MediaStore.Images.Media.insertImage(
                     getContentResolver(), currentQrBitmap, "PalGate_Link_QR", null);
-            Uri uri = Uri.parse(path);
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType("image/*");
-            share.putExtra(Intent.EXTRA_STREAM, uri);
+            share.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
             share.putExtra(Intent.EXTRA_TEXT,
-                    "פתח תמונה זו במחשב/טאבלט וסרוק אותה עם PalGate → מכשירים מקושרים → קשר מכשיר");
+                    "פתח תמונה זו במחשב/טאבלט וסרוק עם PalGate ← מכשירים מקושרים ← קשר מכשיר");
             startActivity(Intent.createChooser(share, "שלח קוד QR"));
         } catch (Exception e) {
             Toast.makeText(this, "שגיאה בשיתוף", Toast.LENGTH_SHORT).show();
@@ -172,16 +271,15 @@ public class LinkActivity extends AppCompatActivity {
         conn.setRequestMethod("GET");
         conn.setRequestProperty("User-Agent", USER_AGENT);
         conn.setConnectTimeout(10000);
-        conn.setReadTimeout(180000); // 3 min
+        conn.setReadTimeout(180000);
         int code = conn.getResponseCode();
-        InputStream is = code >= 200 && code < 300
-                ? conn.getInputStream() : conn.getErrorStream();
+        InputStream is = code >= 200 && code < 300 ? conn.getInputStream() : conn.getErrorStream();
         String body = readStream(is);
         conn.disconnect();
         return new JSONObject(body);
     }
 
-    private JSONObject getJsonAuth(String urlStr, String token) throws Exception {
+    private void getJsonAuth(String urlStr, String token) throws Exception {
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -189,12 +287,8 @@ public class LinkActivity extends AppCompatActivity {
         conn.setRequestProperty("X-Bt-Token", token);
         conn.setConnectTimeout(10000);
         conn.setReadTimeout(15000);
-        int code = conn.getResponseCode();
-        InputStream is = code >= 200 && code < 300
-                ? conn.getInputStream() : conn.getErrorStream();
-        readStream(is);
+        conn.getResponseCode();
         conn.disconnect();
-        return new JSONObject("{}");
     }
 
     private String readStream(InputStream is) throws IOException {
@@ -228,15 +322,7 @@ public class LinkActivity extends AppCompatActivity {
             return Bitmap.createBitmap(pixels, w, h, Bitmap.Config.RGB_565);
         } catch (Exception e) {
             Bitmap bmp = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565);
-            Canvas canvas = new Canvas(bmp);
-            canvas.drawColor(Color.WHITE);
-            Paint p = new Paint();
-            p.setColor(Color.BLACK);
-            int cell = size / 25;
-            for (int r = 0; r < 25; r++)
-                for (int c = 0; c < 25; c++)
-                    if ((r + c + r * c) % 3 == 0)
-                        canvas.drawRect(c*cell, r*cell, (c+1)*cell, (r+1)*cell, p);
+            new Canvas(bmp).drawColor(Color.WHITE);
             return bmp;
         }
     }
