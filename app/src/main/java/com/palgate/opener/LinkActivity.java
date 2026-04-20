@@ -215,7 +215,7 @@ public class LinkActivity extends AppCompatActivity {
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("User-Agent", USER_AGENT);
-                conn.setRequestProperty("X-Bt-Token", derived);
+                conn.setRequestProperty("x-bt-token", derived);
                 conn.setConnectTimeout(10000);
                 conn.setReadTimeout(10000);
                 int code = conn.getResponseCode();
@@ -306,7 +306,7 @@ public class LinkActivity extends AppCompatActivity {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("User-Agent", USER_AGENT);
-        conn.setRequestProperty("X-Bt-Token", token);
+        conn.setRequestProperty("x-bt-token", token);
         conn.setConnectTimeout(10000);
         conn.setReadTimeout(15000);
         conn.getResponseCode();
